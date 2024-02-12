@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+
 import "./App.css"
 // Redux
 import { useDispatch, useSelector } from "react-redux"
@@ -41,6 +42,7 @@ function App() {
   const { user } = useSelector((state) => state.profile)
 
   useEffect(() => {
+    console.log("this is the env", process.env)
     if (localStorage.getItem("token")) {
       const token = JSON.parse(localStorage.getItem("token"))
       dispatch(getUserDetails(token, navigate))

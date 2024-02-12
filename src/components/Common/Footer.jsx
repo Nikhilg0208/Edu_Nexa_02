@@ -172,9 +172,7 @@ const Footer = () => {
             })}
           </div>
 
-          <div className="text-center">
-            Made with ❤️ EduNexa © 2023 Studynotion
-          </div>
+          <div className="text-center">Made with ❤️ EduNexa © 2023 EduNexa</div>
         </div>
       </div>
     </div>

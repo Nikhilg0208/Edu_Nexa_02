@@ -6,6 +6,9 @@ import { setPaymentLoading } from "../../slices/courseSlice"
 import { apiConnector } from "../apiConnector"
 import { studentEndpoints } from "../apis"
 
+// COURSE_PAYMENT_API: BASE_URL + "/payment/capturePayment",
+//   COURSE_VERIFY_API: BASE_URL + "/payment/verifyPayment",
+//   SEND_PAYMENT_SUCCESS_EMAIL_API: BASE_URL + "/payment/sendPaymentSuccessEmail",
 const {
   COURSE_PAYMENT_API,
   COURSE_VERIFY_API,
@@ -46,7 +49,7 @@ export async function BuyCourse(
       )
       return
     }
-
+    // console.log(courses)
     // Initiating the Order in Backend
     const orderResponse = await apiConnector(
       "POST",
@@ -62,11 +65,13 @@ export async function BuyCourse(
     if (!orderResponse.data.success) {
       throw new Error(orderResponse.data.message)
     }
+    // console.log("paument")
     console.log("PAYMENT RESPONSE FROM BACKEND............", orderResponse.data)
+    // console.log("this is the main key", process.env.RAZORPAY_KEY)
 
     // Opening the Razorpay SDK
     const options = {
-      key: process.env.RAZORPAY_KEY,
+      key: process.env.REACT_APP_RAZORPAY_KEY,
       currency: orderResponse.data.data.currency,
       amount: `${orderResponse.data.data.amount}`,
       order_id: orderResponse.data.data.id,
@@ -82,6 +87,7 @@ export async function BuyCourse(
         verifyPayment({ ...response, courses }, token, navigate, dispatch)
       },
     }
+    console.log("options", options)
     const paymentObject = new window.Razorpay(options)
 
     paymentObject.open()
@@ -101,12 +107,12 @@ async function verifyPayment(bodyData, token, navigate, dispatch) {
   const toastId = toast.loading("Verifying Payment...")
   dispatch(setPaymentLoading(true))
   try {
+    console.log("varigyPayment")
     const response = await apiConnector("POST", COURSE_VERIFY_API, bodyData, {
       Authorization: `Bearer ${token}`,
     })
 
     console.log("VERIFY PAYMENT RESPONSE FROM BACKEND............", response)
-
     if (!response.data.success) {
       throw new Error(response.data.message)
     }
