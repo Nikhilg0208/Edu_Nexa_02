@@ -119,7 +119,6 @@ exports.getAllRatingReview = async (req, res) => {
         select: "courseName", //Specify the fields you want to populate from the "Course" model
       })
       .exec()
-
     res.status(200).json({
       success: true,
       data: allReviews,

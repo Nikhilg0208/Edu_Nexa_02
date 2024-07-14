@@ -28,7 +28,6 @@ function ReviewSlider() {
         ratingsEndpoints.REVIEWS_DETAILS_API
       )
       if (data?.success) {
-        console.log("this is data", data)
         setReviews(data?.data)
       }
     })()
