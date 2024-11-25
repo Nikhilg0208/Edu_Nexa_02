@@ -11,7 +11,7 @@ export const connect = () => {
     .then(() => console.log("DB Connection Successful"))
     .catch((err) => {
       console.error("DB Connection Failed");
-      console.error(err);
+      // console.error(err);
       process.exit(1);
     });
 };

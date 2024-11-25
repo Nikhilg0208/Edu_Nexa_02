@@ -1,17 +1,17 @@
 import express from "express";
 import userRoutes from "./routes/user.js";
 
-import courseRoutes from "./routes/course.js";
-import profileRoutes from "./routes/profile.js";
-import paymentRoutes from "./routes/payments.js";
 import contactUsRoute from "./routes/contact.js";
+import courseRoutes from "./routes/course.js";
+import paymentRoutes from "./routes/payments.js";
+import profileRoutes from "./routes/profile.js";
 
-import { connect } from "./config/database.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { cloudinaryConnect } from "./config/cloudinary.js";
-import fileUpload from "express-fileupload";
 import dotenv from "dotenv";
+import fileUpload from "express-fileupload";
+import { cloudinaryConnect } from "./config/cloudinary.js";
+import { connect } from "./config/database.js";
 
 const app = express();
 
