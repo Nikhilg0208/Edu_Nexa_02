@@ -2,6 +2,7 @@ import { Category } from "../models/Category.js";
 import { Course } from "../models/Course.js";
 import { CourseProgress } from "../models/CourseProgress.js";
 import { Section } from "../models/Section.js";
+import { User } from "../models/User.js";
 import { uploadImageToCloudinary } from "../utils/imageUploader.js";
 
 import { convertSecondsToDuration } from "../utils/secToDuration.js";

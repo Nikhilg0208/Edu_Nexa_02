@@ -1,7 +1,6 @@
 import { Section } from "../models/Section.js";
-import { uploadImageToCloudinary } from "../utils/imageUploader.js";
 import { SubSection } from "../models/Subsection.js";
-import { Course } from "../models/Course.js";
+import { uploadImageToCloudinary } from "../utils/imageUploader.js";
 
 export const createSubSection = async (req, res) => {
   try {
