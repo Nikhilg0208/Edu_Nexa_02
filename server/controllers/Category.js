@@ -1,51 +1,52 @@
-const Category = require("../models/Category")
+import { Category } from "../models/Category.js";
 
 function getRandomInt(max) {
-  return Math.floor(Math.random() * max)
+  return Math.floor(Math.random() * max);
 }
-exports.createCategory = async (req, res) => {
+
+export const createCategory = async (req, res) => {
   try {
-    const { name, description } = req.body
+    const { name, description } = req.body;
     if (!name) {
       return res
         .status(400)
-        .json({ success: false, message: "All fields are required" })
+        .json({ success: false, message: "All fields are required" });
     }
     const CategorysDetails = await Category.create({
       name: name,
       description: description,
-    })
-    console.log(CategorysDetails)
+    });
+    console.log(CategorysDetails);
     return res.status(200).json({
       success: true,
       message: "Categorys Created Successfully",
-    })
+    });
   } catch (error) {
     return res.status(500).json({
       success: true,
       message: error.message,
-    })
+    });
   }
-}
+};
 
-exports.showAllCategories = async (req, res) => {
+export const showAllCategories = async (req, res) => {
   try {
-    const allCategorys = await Category.find()
+    const allCategorys = await Category.find();
     res.status(200).json({
       success: true,
       data: allCategorys,
-    })
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
       message: error.message,
-    })
+    });
   }
-}
+};
 
-exports.categoryPageDetails = async (req, res) => {
+export const categoryPageDetails = async (req, res) => {
   try {
-    const { categoryId } = req.body
+    const { categoryId } = req.body;
     // Get courses for the specified category
     const selectedCategory = await Category.findById(categoryId)
       .populate({
@@ -53,32 +54,32 @@ exports.categoryPageDetails = async (req, res) => {
         match: { status: "Published" },
         populate: "ratingAndReviews",
       })
-      .exec()
+      .exec();
 
-    console.log("SELECTED COURSE", selectedCategory)
+    console.log("SELECTED COURSE", selectedCategory);
     // Handle the case when the category is not found
     if (!selectedCategory) {
-      console.log("Category not found.")
+      console.log("Category not found.");
       return res
         .status(404)
-        .json({ success: false, message: "Category not found" })
+        .json({ success: false, message: "Category not found" });
     }
     // Handle the case when there are no courses
     if (selectedCategory.courses.length === 0) {
-      console.log("No courses found for the selected category.")
+      console.log("No courses found for the selected category.");
       return res.status(404).json({
         success: false,
         message: "No courses found for the selected category.",
-      })
+      });
     }
 
     // Get courses for other categories
     const categoriesExceptSelected = await Category.find({
       _id: { $ne: categoryId },
-    })
-    const len = categoriesExceptSelected.length
-    console.log("length", len)
-    let differentCategory = null
+    });
+    const len = categoriesExceptSelected.length;
+    console.log("length", len);
+    let differentCategory = null;
     if (len > 0) {
       differentCategory = await Category.findOne(
         categoriesExceptSelected[getRandomInt(len)]._id
@@ -87,7 +88,7 @@ exports.categoryPageDetails = async (req, res) => {
           path: "courses",
           match: { status: "Published" },
         })
-        .exec()
+        .exec();
     }
 
     // Get top-selling courses across all categories
@@ -96,11 +97,11 @@ exports.categoryPageDetails = async (req, res) => {
         path: "courses",
         match: { status: "Published" },
       })
-      .exec()
-    const allCourses = allCategories.flatMap((category) => category.courses)
+      .exec();
+    const allCourses = allCategories.flatMap((category) => category.courses);
     const mostSellingCourses = allCourses
       .sort((a, b) => b.sold - a.sold)
-      .slice(0, 10)
+      .slice(0, 10);
 
     res.status(200).json({
       success: true,
@@ -109,12 +110,12 @@ exports.categoryPageDetails = async (req, res) => {
         differentCategory,
         mostSellingCourses,
       },
-    })
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
       message: "Internal server error",
       error: error.message,
-    })
+    });
   }
-}
+};

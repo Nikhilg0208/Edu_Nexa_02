@@ -1,4 +1,4 @@
-exports.contactUsEmail = (
+export const contactUsEmail = (
   email,
   firstname,
   lastname,
@@ -92,5 +92,5 @@ exports.contactUsEmail = (
       </div>
   </body>
   
-  </html>`
-}
+  </html>`;
+};

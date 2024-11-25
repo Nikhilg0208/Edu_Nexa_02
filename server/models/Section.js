@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose";
 
 // Define the Section schema
 const sectionSchema = new mongoose.Schema({
@@ -12,7 +12,7 @@ const sectionSchema = new mongoose.Schema({
       ref: "SubSection",
     },
   ],
-})
+});
 
 // Export the Section model
-module.exports = mongoose.model("Section", sectionSchema)
+export const Section = mongoose.model("Section", sectionSchema);

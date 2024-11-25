@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose";
 
 // Define the Courses schema
 const coursesSchema = new mongoose.Schema({
@@ -54,7 +54,7 @@ const coursesSchema = new mongoose.Schema({
     enum: ["Draft", "Published"],
   },
   createdAt: { type: Date, default: Date.now },
-})
+});
 
 // Export the Courses model
-module.exports = mongoose.model("Course", coursesSchema)
+export const Course = mongoose.model("Course", coursesSchema);

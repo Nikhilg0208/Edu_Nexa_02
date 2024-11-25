@@ -1,4 +1,4 @@
-exports.passwordUpdated = (email, name) => {
+export const passwordUpdated = (email, name) => {
   return `<!DOCTYPE html>
     <html>
     
@@ -70,5 +70,5 @@ exports.passwordUpdated = (email, name) => {
         </div>
     </body>
     
-    </html>`
-}
+    </html>`;
+};

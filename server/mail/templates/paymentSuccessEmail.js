@@ -1,4 +1,4 @@
-exports.paymentSuccessEmail = (name, amount, orderId, paymentId) => {
+export const paymentSuccessEmail = (name, amount, orderId, paymentId) => {
   return `<!DOCTYPE html>
     <html>
     
@@ -80,5 +80,5 @@ exports.paymentSuccessEmail = (name, amount, orderId, paymentId) => {
         </div>
     </body>
     
-    </html>`
-}
+    </html>`;
+};
