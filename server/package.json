@@ -38,6 +38,7 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
     "jest": "^29.7.0"
   }
 }
