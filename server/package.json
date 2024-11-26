@@ -9,7 +9,7 @@
     "dev": "nodemon index.js",
     "test-watch": "jest --watch",
     "test": "jest",
-    "build": "babel ./ -d ./dist"
+    "build": "tsc"
   },
   "keywords": [
     "EduNexa-backend"
@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
     "jest": "^29.7.0"
   }
 }

@@ -111,11 +111,11 @@ export const getAllRatingReview = async (req, res) => {
     const allReviews = await RatingAndReview.find({})
       .sort({ rating: "desc" })
       .populate({
-        path: "user",
+        path: "User",
         select: "firstName lastName email image", // Specify the fields you want to populate from the "Profile" model
       })
       .populate({
-        path: "course",
+        path: "Course",
         select: "courseName", //Specify the fields you want to populate from the "Course" model
       })
       .exec();

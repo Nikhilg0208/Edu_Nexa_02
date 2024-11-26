@@ -59,7 +59,6 @@ var createCategory = function (req, res) { return __awaiter(void 0, void 0, void
                     })];
             case 1:
                 CategorysDetails = _b.sent();
-                console.log(CategorysDetails);
                 return [2 /*return*/, res.status(200).json({
                         success: true,
                         message: "Categorys Created Successfully",

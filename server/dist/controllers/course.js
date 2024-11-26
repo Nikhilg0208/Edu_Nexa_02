@@ -41,6 +41,7 @@ var Category_js_1 = require("../models/Category.js");
 var Course_js_1 = require("../models/Course.js");
 var CourseProgress_js_1 = require("../models/CourseProgress.js");
 var Section_js_1 = require("../models/Section.js");
+var User_js_1 = require("../models/User.js");
 var imageUploader_js_1 = require("../utils/imageUploader.js");
 var secToDuration_js_1 = require("../utils/secToDuration.js");
 // Function to create a new course
@@ -74,7 +75,7 @@ var createCourse = function (req, res) { return __awaiter(void 0, void 0, void 0
                 if (!status_1 || status_1 === undefined) {
                     status_1 = "Draft";
                 }
-                return [4 /*yield*/, User.findById(userId, {
+                return [4 /*yield*/, User_js_1.User.findById(userId, {
                         accountType: "Instructor",
                     })];
             case 1:
@@ -112,7 +113,7 @@ var createCourse = function (req, res) { return __awaiter(void 0, void 0, void 0
             case 4:
                 newCourse = _b.sent();
                 // Add the new course to the User Schema of the Instructor
-                return [4 /*yield*/, User.findByIdAndUpdate({
+                return [4 /*yield*/, User_js_1.User.findByIdAndUpdate({
                         _id: instructorDetails._id,
                     }, {
                         $push: {
@@ -498,7 +499,7 @@ var deleteCourse = function (req, res) { return __awaiter(void 0, void 0, void 0
             case 2:
                 if (!(_i < studentsEnrolled_1.length)) return [3 /*break*/, 5];
                 studentId = studentsEnrolled_1[_i];
-                return [4 /*yield*/, User.findByIdAndUpdate(studentId, {
+                return [4 /*yield*/, User_js_1.User.findByIdAndUpdate(studentId, {
                         $pull: { courses: courseId },
                     })];
             case 3:

@@ -38,9 +38,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteSubSection = exports.updateSubSection = exports.createSubSection = void 0;
 var Section_js_1 = require("../models/Section.js");
-var imageUploader_js_1 = require("../utils/imageUploader.js");
 var Subsection_js_1 = require("../models/Subsection.js");
-var Course_js_1 = require("../models/Course.js");
+var imageUploader_js_1 = require("../utils/imageUploader.js");
 var createSubSection = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, sectionId, title, description, video, uploadDetails, SubSectionDetails, updatedSection, error_1;
     return __generator(this, function (_b) {

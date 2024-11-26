@@ -11,7 +11,7 @@ var connect = function () {
         .then(function () { return console.log("DB Connection Successful"); })
         .catch(function (err) {
         console.error("DB Connection Failed");
-        console.error(err);
+        // console.error(err);
         process.exit(1);
     });
 };
