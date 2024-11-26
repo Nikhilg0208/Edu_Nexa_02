@@ -1,10 +1,9 @@
 import express from "express";
-import userRoutes from "./routes/user.js";
-
 import contactUsRoute from "./routes/contact.js";
 import courseRoutes from "./routes/course.js";
 import paymentRoutes from "./routes/payments.js";
 import profileRoutes from "./routes/profile.js";
+import userRoutes from "./routes/user.js";
 
 import cookieParser from "cookie-parser";
 import cors from "cors";

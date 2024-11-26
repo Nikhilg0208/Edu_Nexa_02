@@ -4,7 +4,6 @@ import { contactUsEmail } from "../mail/templates/contactFormRes.js";
 export const contactUsController = async (req, res) => {
   const { email, firstname, lastname, message, phoneNo, countrycode } =
     req.body;
-  console.log(req.body);
   try {
     const emailRes = await mailSender(
       email,
