@@ -24,6 +24,9 @@ connect();
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.options("*", cors());
+
 app.use(
   cors({
     origin: "https://edunexa-rho.vercel.app",
