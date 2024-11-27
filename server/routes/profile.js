@@ -11,9 +11,6 @@ import {
 
 const profileRoutes = express.Router();
 
-// ********************************************************************************************************
-//                                      Profile routes
-// ********************************************************************************************************
 // Delet User Account
 profileRoutes.delete("/deleteProfile", auth, deleteAccount);
 profileRoutes.put("/updateProfile", auth, updateProfile);
