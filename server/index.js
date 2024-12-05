@@ -29,10 +29,11 @@ app.options("*", cors());
 
 app.use(
   cors({
-    origin: "https://edunexa-rho.vercel.app",
+    origin: "https://www.rcbian.shop/",
     credentials: true,
   })
 );
+
 app.use(
   fileUpload({
     useTempFiles: true,
