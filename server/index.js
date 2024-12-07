@@ -29,7 +29,7 @@ app.options("*", cors());
 
 app.use(
   cors({
-    origin: ["https://www.rcbian.shop", "http://localhost:3000/"],
+    origin: ["https://www.rcbian.shop", "http://localhost:3000"],
     credentials: true,
   })
 );
