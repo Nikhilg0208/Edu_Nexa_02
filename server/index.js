@@ -4,7 +4,7 @@ import courseRoutes from "./routes/course.js";
 import paymentRoutes from "./routes/payments.js";
 import profileRoutes from "./routes/profile.js";
 import userRoutes from "./routes/user.js";
-
+import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -16,11 +16,17 @@ const app = express();
 
 dotenv.config();
 
+const mode = process.env.mode || "production";
+
 const PORT = process.env.PORT || 4000;
 
 dotenv.config();
 
 connect();
+
+if (mode !== "production") {
+  app.use(morgan("dev"));
+}
 
 app.use(express.json());
 app.use(cookieParser());
@@ -29,7 +35,11 @@ app.options("*", cors());
 
 app.use(
   cors({
-    origin: ["https://www.rcbian.shop", "http://localhost:3000"],
+    origin: [
+      "https://www.rcbian.shop",
+      "http://localhost:3000",
+      "http://localhost:3000/",
+    ],
     credentials: true,
   })
 );

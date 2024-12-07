@@ -87,13 +87,23 @@ export const verifyPayment = async (req, res) => {
   ) {
     return res.status(200).json({ success: false, message: "Payment Failed" });
   }
+  console.log(
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+    courses,
+    userId
+  );
 
   let body = razorpay_order_id + "|" + razorpay_payment_id;
+  console.log("body", body);
 
   const expectedSignature = crypto
     .createHmac("sha256", process.env.RAZORPAY_SECRET)
     .update(body.toString())
     .digest("hex");
+
+  console.log("expectedSignature", expectedSignature, razorpay_signature);
 
   if (expectedSignature === razorpay_signature) {
     await enrollStudents(courses, userId, res);
@@ -160,7 +170,6 @@ const enrollStudents = async (courses, userId, res) => {
           .json({ success: false, error: "Course not found" });
       }
 
-
       const courseProgress = await CourseProgress.create({
         courseID: courseId,
         userId: userId,
@@ -178,7 +187,6 @@ const enrollStudents = async (courses, userId, res) => {
         { new: true }
       );
 
-
       // Send an email notification to the enrolled student
       const emailResponse = await mailSender(
         enrolledStudent.email,
@@ -188,8 +196,6 @@ const enrollStudents = async (courses, userId, res) => {
           `${enrolledStudent.firstName} ${enrolledStudent.lastName}`
         )
       );
-
-
     } catch (error) {
       console.log(error);
       return res.status(400).json({ success: false, error: error.message });

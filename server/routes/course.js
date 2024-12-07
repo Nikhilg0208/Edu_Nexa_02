@@ -63,7 +63,7 @@ courseRoutes.post(
   isStudent,
   updateCourseProgress
 );
-courseRoutes.delete("/deleteCourse", deleteCourse);
+courseRoutes.delete("/deleteCourse", auth, isInstructor, deleteCourse);
 courseRoutes.post("/createCategory", auth, isAdmin, createCategory);
 courseRoutes.get("/showAllCategories", showAllCategories);
 courseRoutes.post("/getCategoryPageDetails", categoryPageDetails);

@@ -213,7 +213,7 @@ export const sendotp = async (req, res) => {
     }
     const otpPayload = { email, otp };
     const otpBody = await OTP.create(otpPayload);
- 
+
     res.status(200).json({
       success: true,
       message: `OTP Sent Successfully`,
@@ -228,13 +228,10 @@ export const sendotp = async (req, res) => {
 // Controller for Changing Password
 export const changePassword = async (req, res) => {
   try {
-    // Get user data from req.user
     const userDetails = await User.findById(req.user.id);
 
-    // Get old password, new password, and confirm new password from req.body
     const { oldPassword, newPassword } = req.body;
 
-    // Validate old password
     const isPasswordMatch = await bcrypt.compare(
       oldPassword,
       userDetails.password
@@ -264,7 +261,6 @@ export const changePassword = async (req, res) => {
           `Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
         )
       );
-   
     } catch (error) {
       // If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
       console.error("Error occurred while sending email:", error);

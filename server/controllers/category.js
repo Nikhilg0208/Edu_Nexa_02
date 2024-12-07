@@ -16,7 +16,7 @@ export const createCategory = async (req, res) => {
       name: name,
       description: description,
     });
- 
+
     return res.status(200).json({
       success: true,
       message: "Categorys Created Successfully",
@@ -58,14 +58,12 @@ export const categoryPageDetails = async (req, res) => {
 
     // Handle the case when the category is not found
     if (!selectedCategory) {
-    
       return res
         .status(404)
         .json({ success: false, message: "Category not found" });
     }
     // Handle the case when there are no courses
     if (selectedCategory.courses.length === 0) {
-
       return res.status(404).json({
         success: false,
         message: "No courses found for the selected category.",
