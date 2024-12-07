@@ -19,6 +19,7 @@ function Navbar() {
 
   const [subLinks, setSubLinks] = useState([])
   const [loading, setLoading] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   useEffect(() => {
     ;(async () => {
@@ -32,8 +33,6 @@ function Navbar() {
       setLoading(false)
     })()
   }, [])
-
-  // console.log("sub links", subLinks)
 
   const matchRoute = (route) => {
     return matchPath({ path: route }, location.pathname)
@@ -148,9 +147,43 @@ function Navbar() {
           )}
           {token !== null && <ProfileDropdown />}
         </div>
-        <button className="mr-4 md:hidden">
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="mr-4 md:hidden"
+        >
           <AiOutlineMenu fontSize={24} fill="#AFB2BF" />
         </button>
+        {isMenuOpen && (
+          <div className="absolute left-0 top-14 z-50 w-full bg-richblack-800 text-richblack-25 md:hidden">
+            <ul className="flex flex-col gap-y-4 p-4">
+              {NavbarLinks.map((link, index) => (
+                <li key={index}>
+                  <Link to={link?.path} onClick={() => setIsMenuOpen(false)}>
+                    {link.title}
+                  </Link>
+                </li>
+              ))}
+              {subLinks
+                ?.filter(
+                  (subLink) =>
+                    Array.isArray(subLink?.courses) &&
+                    subLink?.courses?.length > 0
+                )
+                ?.map((subLink, i) => (
+                  <Link
+                    onClick={() => setIsMenuOpen(false)}
+                    to={`/catalog/${subLink.name
+                      .split(" ")
+                      .join("-")
+                      .toLowerCase()}`}
+                    key={i}
+                  >
+                    <p>{subLink.name}</p>
+                  </Link>
+                ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   )
