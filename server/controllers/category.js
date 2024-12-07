@@ -1,5 +1,5 @@
 import { Category } from "../models/Category.js";
-
+import { redis } from "../config/redis.js";
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
@@ -7,23 +7,26 @@ function getRandomInt(max) {
 export const createCategory = async (req, res) => {
   try {
     const { name, description } = req.body;
-    if (!name) {
-      return res
-        .status(400)
-        .json({ success: false, message: "All fields are required" });
+
+    if (!name?.trim() || !description?.trim()) {
+      return res.status(400).json({
+        message: "Name and description are required and cannot be empty",
+      });
     }
+
     const CategorysDetails = await Category.create({
       name: name,
       description: description,
     });
 
+    await redis.del("categories");
+
     return res.status(200).json({
-      success: true,
       message: "Categorys Created Successfully",
+      data: CategorysDetails,
     });
   } catch (error) {
     return res.status(500).json({
-      success: true,
       message: error.message,
     });
   }
@@ -31,14 +34,24 @@ export const createCategory = async (req, res) => {
 
 export const showAllCategories = async (req, res) => {
   try {
-    const allCategorys = await Category.find();
+    const allCategoriesFromRedis = await redis.get("categories");
+
+    if (allCategoriesFromRedis) {
+      const parsedCategories = JSON.parse(allCategoriesFromRedis);
+
+      return res.status(200).json({
+        data: parsedCategories,
+      });
+    }
+    const allCategories = await Category.find();
+
+    await redis.set("categories", JSON.stringify(allCategories), "EX", 604800);
+
     res.status(200).json({
-      success: true,
-      data: allCategorys,
+      data: allCategories,
     });
   } catch (error) {
     return res.status(500).json({
-      success: false,
       message: error.message,
     });
   }
@@ -101,7 +114,6 @@ export const categoryPageDetails = async (req, res) => {
       .slice(0, 10);
 
     res.status(200).json({
-      success: true,
       data: {
         selectedCategory,
         differentCategory,
@@ -110,7 +122,6 @@ export const categoryPageDetails = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      success: false,
       message: "Internal server error",
       error: error.message,
     });

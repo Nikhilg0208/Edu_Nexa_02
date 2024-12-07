@@ -11,6 +11,7 @@ import dotenv from "dotenv";
 import fileUpload from "express-fileupload";
 import { cloudinaryConnect } from "./config/cloudinary.js";
 import { connect } from "./config/database.js";
+import { initializeRedis } from "./config/redis.js";
 
 const app = express();
 
@@ -20,9 +21,8 @@ const mode = process.env.mode || "production";
 
 const PORT = process.env.PORT || 4000;
 
-dotenv.config();
-
 connect();
+initializeRedis();
 
 if (mode !== "production") {
   app.use(morgan("dev"));
