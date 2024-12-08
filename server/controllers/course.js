@@ -1,19 +1,17 @@
+import { redis } from "../config/redis.js";
 import { Category } from "../models/Category.js";
 import { Course } from "../models/Course.js";
 import { CourseProgress } from "../models/CourseProgress.js";
 import { Section } from "../models/Section.js";
+import { SubSection } from "../models/Subsection.js";
 import { User } from "../models/User.js";
 import { uploadImageToCloudinary } from "../utils/imageUploader.js";
-
-import { convertSecondsToDuration } from "../utils/secToDuration.js";
 
 // Function to create a new course
 export const createCourse = async (req, res) => {
   try {
-    // Get user ID from request object
     const userId = req.user.id;
 
-    // Get all required fields from request body
     let {
       courseName,
       courseDescription,
@@ -24,14 +22,12 @@ export const createCourse = async (req, res) => {
       status,
       instructions: _instructions,
     } = req.body;
-    // Get thumbnail image from request files
+
     const thumbnail = req.files.thumbnailImage;
 
-    // Convert the tag and instructions from stringified Array to Array
     const tag = JSON.parse(_tag);
     const instructions = JSON.parse(_instructions);
 
-    // Check if any of the required fields are missing
     if (
       !courseName ||
       !courseDescription ||
@@ -50,7 +46,7 @@ export const createCourse = async (req, res) => {
     if (!status || status === undefined) {
       status = "Draft";
     }
-    // Check if the user is an instructor
+
     const instructorDetails = await User.findById(userId, {
       accountType: "Instructor",
     });
@@ -62,7 +58,6 @@ export const createCourse = async (req, res) => {
       });
     }
 
-    // Check if the tag given is valid
     const categoryDetails = await Category.findById(category);
     if (!categoryDetails) {
       return res.status(404).json({
@@ -70,13 +65,12 @@ export const createCourse = async (req, res) => {
         message: "Category Details Not Found",
       });
     }
-    // Upload the Thumbnail to Cloudinary
+
     const thumbnailImage = await uploadImageToCloudinary(
       thumbnail,
       process.env.FOLDER_NAME
     );
- 
-    // Create a new course with the given details
+
     const newCourse = await Course.create({
       courseName,
       courseDescription,
@@ -90,7 +84,6 @@ export const createCourse = async (req, res) => {
       instructions,
     });
 
-    // Add the new course to the User Schema of the Instructor
     await User.findByIdAndUpdate(
       {
         _id: instructorDetails._id,
@@ -102,7 +95,7 @@ export const createCourse = async (req, res) => {
       },
       { new: true }
     );
-    // Add the new course to the Categories
+
     const categoryDetails2 = await Category.findByIdAndUpdate(
       { _id: category },
       {
@@ -112,16 +105,14 @@ export const createCourse = async (req, res) => {
       },
       { new: true }
     );
- 
-    // Return the new course and a success message
+
+    await redis.del("allcourses");
+
     res.status(200).json({
-      success: true,
       data: newCourse,
       message: "Course Created Successfully",
     });
   } catch (error) {
-    // Handle any errors that occur during the creation of the course
-    console.error(error);
     res.status(500).json({
       success: false,
       message: "Failed to create course",
@@ -143,7 +134,6 @@ export const editCourse = async (req, res) => {
 
     // If Thumbnail Image is found, update it
     if (req.files) {
-  
       const thumbnail = req.files.thumbnailImage;
       const thumbnailImage = await uploadImageToCloudinary(
         thumbnail,
@@ -183,16 +173,14 @@ export const editCourse = async (req, res) => {
         },
       })
       .exec();
+    await redis.del("allcourses");
 
-    res.json({
-      success: true,
+    res.status(200).json({
       message: "Course updated successfully",
       data: updatedCourse,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({
-      success: false,
       message: "Internal server error",
       error: error.message,
     });
@@ -202,6 +190,13 @@ export const editCourse = async (req, res) => {
 // Get Course List
 export const getAllCourses = async (req, res) => {
   try {
+    const cachedData = await redis.get("allcourses");
+    if (cachedData) {
+      return res.status(200).json({
+        data: JSON.parse(cachedData),
+      });
+    }
+
     const allCourses = await Course.find(
       { status: "Published" },
       {
@@ -216,67 +211,19 @@ export const getAllCourses = async (req, res) => {
       .populate("instructor")
       .exec();
 
+    await redis.set("allcourses", JSON.stringify(allCourses), "EX", 604800);
+
     return res.status(200).json({
-      success: true,
       data: allCourses,
     });
   } catch (error) {
-    console.log(error);
     return res.status(404).json({
-      success: false,
       message: `Can't Fetch Course Data`,
       error: error.message,
     });
   }
 };
 
-// Get One Single Course Details
-// exports.getCourseDetails = async (req, res) => {
-//   try {
-//     const { courseId } = req.body
-//     const courseDetails = await Course.findOne({
-//       _id: courseId,
-//     })
-//       .populate({
-//         path: "instructor",
-//         populate: {
-//           path: "additionalDetails",
-//         },
-//       })
-//       .populate("category")
-//       .populate("ratingAndReviews")
-//       .populate({
-//         path: "courseContent",
-//         populate: {
-//           path: "subSection",
-//         },
-//       })
-//       .exec()
-//     if (!courseDetails || !courseDetails.length) {
-//       return res.status(400).json({
-//         success: false,
-//         message: `Could not find course with id: ${courseId}`,
-//       })
-//     }
-
-//     if (courseDetails.status === "Draft") {
-//       return res.status(403).json({
-//         success: false,
-//         message: `Accessing a draft course is forbidden`,
-//       })
-//     }
-
-//     return res.status(200).json({
-//       success: true,
-//       data: courseDetails,
-//     })
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     })
-//   }
-// }
 export const getCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.body;
@@ -325,7 +272,6 @@ export const getCourseDetails = async (req, res) => {
     const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
 
     return res.status(200).json({
-      success: true,
       data: {
         courseDetails,
         totalDuration,
@@ -333,7 +279,6 @@ export const getCourseDetails = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      success: false,
       message: error.message,
     });
   }
@@ -343,6 +288,7 @@ export const getFullCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.body;
     const userId = req.user.id;
+
     const courseDetails = await Course.findOne({
       _id: courseId,
     })
@@ -367,10 +313,8 @@ export const getFullCourseDetails = async (req, res) => {
       userId: userId,
     });
 
-
     if (!courseDetails) {
       return res.status(400).json({
-        success: false,
         message: `Could not find course with id: ${courseId}`,
       });
     }
@@ -393,7 +337,6 @@ export const getFullCourseDetails = async (req, res) => {
     const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
 
     return res.status(200).json({
-      success: true,
       data: {
         courseDetails,
         totalDuration,
@@ -404,7 +347,6 @@ export const getFullCourseDetails = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      success: false,
       message: error.message,
     });
   }
@@ -423,13 +365,11 @@ export const getInstructorCourses = async (req, res) => {
 
     // Return the instructor's courses
     res.status(200).json({
-      success: true,
       data: instructorCourses,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      success: false,
       message: "Failed to retrieve instructor courses",
       error: error.message,
     });
@@ -474,14 +414,14 @@ export const deleteCourse = async (req, res) => {
     // Delete the course
     await Course.findByIdAndDelete(courseId);
 
+    await redis.del("allcourses");
+
     return res.status(200).json({
-      success: true,
       message: "Course deleted successfully",
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      success: false,
       message: "Server error",
       error: error.message,
     });
