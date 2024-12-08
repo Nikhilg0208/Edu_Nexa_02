@@ -6,6 +6,7 @@ import { Section } from "../models/Section.js";
 import { SubSection } from "../models/Subsection.js";
 import { User } from "../models/User.js";
 import { uploadImageToCloudinary } from "../utils/imageUploader.js";
+import { convertSecondsToDuration } from "../utils/secToDuration.js";
 
 // Function to create a new course
 export const createCourse = async (req, res) => {
