@@ -36,7 +36,6 @@ function CourseDetails() {
     ;(async () => {
       try {
         const res = await fetchCourseDetails(courseId)
-        // console.log("course details res: ", res)
         setResponse(res)
       } catch (error) {
         console.log("Could not fetch Course Details")
@@ -83,8 +82,8 @@ function CourseDetails() {
       </div>
     )
   }
-  // console.log("nikhil", response)
-  if (!response.success) {
+
+  if (!response.data) {
     return <Error />
   }
 

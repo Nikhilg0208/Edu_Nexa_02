@@ -50,9 +50,8 @@ export function updateProfile(token, formData) {
       const response = await apiConnector("PUT", UPDATE_PROFILE_API, formData, {
         Authorization: `Bearer ${token}`,
       })
-      console.log("UPDATE_PROFILE_API API RESPONSE............", response)
 
-      if (!response.data.success) {
+      if (response?.status !== 200) {
         throw new Error(response.data.message)
       }
       const userImage = response.data.updatedUserDetails.image

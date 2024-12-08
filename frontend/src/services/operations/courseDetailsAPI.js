@@ -1,4 +1,5 @@
 import { toast } from "react-hot-toast"
+
 import { apiConnector } from "../apiConnector"
 import { courseEndpoints } from "../apis"
 
@@ -26,7 +27,8 @@ export const getAllCourses = async () => {
   let result = []
   try {
     const response = await apiConnector("GET", GET_ALL_COURSE_API)
-    if (!response?.data?.success) {
+    console.log("this is response", response)
+    if (!response) {
       throw new Error("Could Not Fetch Course Categories")
     }
     result = response?.data?.data
@@ -48,7 +50,7 @@ export const fetchCourseDetails = async (courseId) => {
     })
     console.log("COURSE_DETAILS_API API RESPONSE............", response)
 
-    if (!response.data.success) {
+    if (response.status !== 200) {
       throw new Error(response.data.message)
     }
     result = response.data
@@ -67,8 +69,7 @@ export const fetchCourseCategories = async () => {
   let result = []
   try {
     const response = await apiConnector("GET", COURSE_CATEGORIES_API)
-    console.log("COURSE_CATEGORIES_API API RESPONSE............", response)
-    if (!response?.data?.success) {
+    if (response?.status !== 200) {
       throw new Error("Could Not Fetch Course Categories")
     }
     result = response?.data?.data
@@ -88,8 +89,8 @@ export const addCourseDetails = async (data, token) => {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     })
-    console.log("CREATE COURSE API RESPONSE............", response)
-    if (!response?.data?.success) {
+
+    if (response?.status !== 200) {
       throw new Error("Could Not Add Course Details")
     }
     toast.success("Course Details Added Successfully")
@@ -111,8 +112,8 @@ export const editCourseDetails = async (data, token) => {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     })
-    console.log("EDIT COURSE API RESPONSE............", response)
-    if (!response?.data?.success) {
+
+    if (response?.status !== 200) {
       throw new Error("Could Not Update Course Details")
     }
     toast.success("Course Details Updated Successfully")
@@ -269,13 +270,12 @@ export const fetchInstructorCourses = async (token) => {
         Authorization: `Bearer ${token}`,
       }
     )
-    console.log("INSTRUCTOR COURSES API RESPONSE............", response)
-    if (!response?.data?.success) {
+
+    if (response?.status !== 200) {
       throw new Error("Could Not Fetch Instructor Courses")
     }
     result = response?.data?.data
   } catch (error) {
-    console.log("INSTRUCTOR COURSES API ERROR............", error)
     toast.error(error.message)
   }
   toast.dismiss(toastId)
@@ -289,13 +289,11 @@ export const deleteCourse = async (data, token) => {
     const response = await apiConnector("DELETE", DELETE_COURSE_API, data, {
       Authorization: `Bearer ${token}`,
     })
-    console.log("DELETE COURSE API RESPONSE............", response)
     if (!response?.data?.success) {
       throw new Error("Could Not Delete Course")
     }
     toast.success("Course Deleted")
   } catch (error) {
-    console.log("DELETE COURSE API ERROR............", error)
     toast.error(error.message)
   }
   toast.dismiss(toastId)
@@ -317,9 +315,8 @@ export const getFullDetailsOfCourse = async (courseId, token) => {
         Authorization: `Bearer ${token}`,
       }
     )
-    console.log("COURSE_FULL_DETAILS_API API RESPONSE............", response)
 
-    if (!response.data.success) {
+    if (response.status !== 200) {
       throw new Error(response.data.message)
     }
     result = response?.data?.data
