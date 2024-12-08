@@ -35,6 +35,7 @@ function Catalog() {
       ;(async () => {
         try {
           const res = await getCatalogPageData(categoryId)
+
           setCatalogPageData(res)
         } catch (error) {
           console.log(error)
@@ -50,7 +51,7 @@ function Catalog() {
       </div>
     )
   }
-  if (!loading && !catalogPageData.success) {
+  if (!loading && !catalogPageData.data) {
     return <Error />
   }
 
