@@ -1,4 +1,5 @@
 import { CourseProgress } from "../models/CourseProgress.js";
+import { SubSection } from "../models/Subsection.js";
 
 export const updateCourseProgress = async (req, res) => {
   const { courseId, subsectionId } = req.body;
@@ -15,7 +16,7 @@ export const updateCourseProgress = async (req, res) => {
       courseID: courseId,
       userId: userId,
     });
- 
+
     if (!courseProgress) {
       // If course progress doesn't exist, create a new one
       return res.status(404).json({
