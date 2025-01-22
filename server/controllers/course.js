@@ -1,4 +1,4 @@
-import { redis } from "../config/redis.js";
+import { redis } from "../index.js";
 import { Category } from "../models/Category.js";
 import { Course } from "../models/Course.js";
 import { CourseProgress } from "../models/CourseProgress.js";

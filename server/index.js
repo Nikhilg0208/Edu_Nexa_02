@@ -1,17 +1,17 @@
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import dotenv from "dotenv";
 import express from "express";
+import fileUpload from "express-fileupload";
+import morgan from "morgan";
+import { cloudinaryConnect } from "./config/cloudinary.js";
+import { connect } from "./config/database.js";
+import { connectRedis } from "./config/redis.js";
 import contactUsRoute from "./routes/contact.js";
 import courseRoutes from "./routes/course.js";
 import paymentRoutes from "./routes/payments.js";
 import profileRoutes from "./routes/profile.js";
 import userRoutes from "./routes/user.js";
-import morgan from "morgan";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import dotenv from "dotenv";
-import fileUpload from "express-fileupload";
-import { cloudinaryConnect } from "./config/cloudinary.js";
-import { connect } from "./config/database.js";
-import { initializeRedis } from "./config/redis.js";
 
 const app = express();
 
@@ -19,10 +19,12 @@ dotenv.config();
 
 const mode = process.env.mode || "production";
 
+const redisURI = process.env.REDIS_URI || "";
+
 const PORT = process.env.PORT || 4000;
 
 connect();
-initializeRedis();
+export const redis = connectRedis(redisURI);
 
 if (mode !== "production") {
   app.use(morgan("dev"));

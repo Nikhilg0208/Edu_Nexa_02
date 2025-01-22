@@ -1,5 +1,5 @@
 import { Category } from "../models/Category.js";
-import { redis } from "../config/redis.js";
+import { redis } from "../index.js";
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
