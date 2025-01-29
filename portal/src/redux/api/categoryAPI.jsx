@@ -8,10 +8,13 @@ export const categoryAPI = createApi({
   tagTypes: ["categoryApi"],
   endpoints: (builder) => ({
     createCategory: builder.mutation({
-      query: (data) => ({
+      query: ({ data, token }) => ({
         url: "createCategory",
         method: "POST",
         body: data,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }),
       invalidatesTags: ["categoryApi"],
     }),
@@ -26,9 +29,13 @@ export const categoryAPI = createApi({
       invalidatesTags: ["categoryApi"],
     }),
     updateCategory: builder.mutation({
-      query: (categoryId) => ({
+      query: ({ categoryId, data, token }) => ({
         url: `category/${categoryId}`,
         method: "PATCH",
+        body: data,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }),
       invalidatesTags: ["categoryApi"],
     }),

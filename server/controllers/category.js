@@ -10,6 +10,7 @@ export const createCategory = async (req, res) => {
 
     if (!name?.trim() || !description?.trim()) {
       return res.status(400).json({
+        success: false,
         message: "Name and description are required and cannot be empty",
       });
     }
@@ -22,6 +23,7 @@ export const createCategory = async (req, res) => {
     await redis.del("categories");
 
     return res.status(200).json({
+      success: true,
       message: "Categorys Created Successfully",
       data: CategorysDetails,
     });
@@ -64,6 +66,7 @@ export const deleteCategory = async (req, res) => {
 
     if (!id) {
       return res.status(400).json({
+        success: false,
         message: "Category id is required",
       });
     }
@@ -74,11 +77,13 @@ export const deleteCategory = async (req, res) => {
 
     if (!CategorysDetails) {
       return res.status(404).json({
+        success: false,
         message: "Category not found",
       });
     }
     if (CategorysDetails.courses.length > 0) {
       return res.status(400).json({
+        success: false,
         message: "this category having courses",
       });
     }
@@ -87,11 +92,13 @@ export const deleteCategory = async (req, res) => {
     await CategorysDetails.deleteOne();
 
     return res.status(200).json({
+      success: true,
       message: "Categorys deleted Successfully",
       data: CategorysDetails,
     });
   } catch (error) {
     return res.status(500).json({
+      success: false,
       message: error.message,
     });
   }
@@ -99,55 +106,55 @@ export const deleteCategory = async (req, res) => {
 
 export const updateCategory = async (req, res) => {
   try {
-    const { id } = req.params; // Category ID from request parameters
-    const { name, description } = req.body; // Updated name and description from request body
+    const { id } = req.params;
+    const { name, description } = req.body;
 
-    // Validate category ID
     if (!id) {
       return res.status(400).json({
+        success: false,
         message: "Category ID is required",
       });
     }
 
     if (!name && !description) {
       return res.status(400).json({
+        success: false,
         message:
           "At least one field (name or description) is required to update the category.",
       });
     }
 
-    // Find category by ID
     const categoryDetails = await Category.findById(id);
 
     if (!categoryDetails) {
       return res.status(404).json({
+        success: false,
         message: "Category not found",
       });
     }
 
-    // Check if the category has associated courses
     if (categoryDetails.courses.length > 0) {
       return res.status(400).json({
+        success: false,
         message: "This category has associated courses and cannot be updated.",
       });
     }
 
-    // Update the category details
     if (name) categoryDetails.name = name;
     if (description) categoryDetails.description = description;
 
-    // Save the updated category
     await categoryDetails.save();
 
-    // Clear the cache
     await redis.del("categories");
 
     return res.status(200).json({
+      success: true,
       message: "Category updated successfully",
       data: categoryDetails,
     });
   } catch (error) {
     return res.status(500).json({
+      success: false,
       message: error.message,
     });
   }
