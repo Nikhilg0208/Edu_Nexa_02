@@ -13,7 +13,9 @@ import {
 import {
   categoryPageDetails,
   createCategory,
+  deleteCategory,
   showAllCategories,
+  updateCategory,
 } from "../controllers/category.js";
 
 import {
@@ -65,8 +67,15 @@ courseRoutes.post(
 );
 courseRoutes.delete("/deleteCourse", auth, isInstructor, deleteCourse);
 courseRoutes.post("/createCategory", auth, isAdmin, createCategory);
+
 courseRoutes.get("/showAllCategories", showAllCategories);
 courseRoutes.post("/getCategoryPageDetails", categoryPageDetails);
+
+courseRoutes
+  .route("/Category/:id")
+  .delete(auth, isAdmin, deleteCategory)
+  .patch(auth, isAdmin, updateCategory);
+
 courseRoutes.post("/createRating", auth, isStudent, createRating);
 courseRoutes.get("/getAverageRating", getAverageRating);
 courseRoutes.get("/getReviews", getAllRatingReview);

@@ -1,6 +1,5 @@
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { User } from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -43,9 +42,7 @@ export const auth = async (req, res, next) => {
 
 export const isStudent = async (req, res, next) => {
   try {
-    const userDetails = await User.findOne({ email: req.user.email });
-
-    if (userDetails.accountType !== "Student") {
+    if (req.user.role !== "Student") {
       return res.status(401).json({
         success: false,
         message: "This is a Protected Route for Students",
@@ -61,9 +58,7 @@ export const isStudent = async (req, res, next) => {
 
 export const isAdmin = async (req, res, next) => {
   try {
-    const userDetails = await User.findOne({ email: req.user.email });
-
-    if (userDetails.accountType !== "Admin") {
+    if (req.user.role !== "Admin") {
       return res.status(401).json({
         success: false,
         message: "This is a Protected Route for Admin",
@@ -79,10 +74,7 @@ export const isAdmin = async (req, res, next) => {
 
 export const isInstructor = async (req, res, next) => {
   try {
-    const userDetails = await User.findOne({ email: req.user.email });
-  
-
-    if (userDetails.accountType !== "Instructor") {
+    if (req.user.role !== "Instructor") {
       return res.status(401).json({
         success: false,
         message: "This is a Protected Route for Instructor",
