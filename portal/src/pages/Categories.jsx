@@ -28,6 +28,7 @@ const columns = [
     header: "Actions",
     accessorKey: "actions",
     cell: (props) => props.getValue(),
+    enableSorting: false,
   },
 ];
 
@@ -209,7 +210,12 @@ const Categories = () => {
 
         <div className="bg-white shadow-md rounded-lg p-4 max-h-[400px] overflow-y-auto">
           {allCategories.length > 0 ? (
-            <Table columns={columns} data={rows} heading="All Categories" />
+            <Table
+              columns={columns}
+              data={rows}
+              heading="All Categories"
+              showPagination={true}
+            />
           ) : (
             <p className="text-center text-gray-500">No categories found.</p>
           )}

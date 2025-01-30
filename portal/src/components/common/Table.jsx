@@ -2,14 +2,29 @@ import React from "react";
 import {
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import {
+  AiOutlineSortAscending,
+  AiOutlineSortDescending,
+} from "react-icons/ai";
+import { FaSort } from "react-icons/fa";
 
-const Table = ({ columns, data, heading }) => {
+const Table = ({ columns, data, heading, showPagination = false }) => {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    columnResizeMode: "onChange",
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: 6,
+      },
+    },
   });
 
   return (
@@ -23,12 +38,44 @@ const Table = ({ columns, data, heading }) => {
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-4 py-3 text-left font-medium"
+                    className="relative px-4 py-3 text-left font-medium group cursor-pointer select-none"
+                    style={{ width: header.getSize() }}
+                    onClick={
+                      header.column.getCanSort()
+                        ? header.column.getToggleSortingHandler()
+                        : undefined
+                    }
                   >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
+                    <div className="flex items-center justify-between">
+                      <span className="flex-1">
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </span>
+
+                      {header.column.getCanSort() && (
+                        <span className="ml-2 transition-opacity opacity-60 group-hover:opacity-100">
+                          {header.column.getIsSorted() === "asc" ? (
+                            <AiOutlineSortAscending className="text-gray-700" />
+                          ) : header.column.getIsSorted() === "desc" ? (
+                            <AiOutlineSortDescending className="text-gray-700" />
+                          ) : (
+                            <FaSort className="text-gray-500" />
+                          )}
+                        </span>
+                      )}
+                    </div>
+
+                    <div
+                      onMouseDown={header.getResizeHandler()}
+                      onTouchStart={header.getResizeHandler()}
+                      className={`absolute top-0 right-0 h-full w-[4px] cursor-col-resize ${
+                        header.column.getIsResizing()
+                          ? "bg-green-500"
+                          : "bg-black opacity-0 group-hover:opacity-100"
+                      }`}
+                    ></div>
                   </th>
                 ))}
               </tr>
@@ -63,6 +110,30 @@ const Table = ({ columns, data, heading }) => {
             )}
           </tbody>
         </table>
+
+        {showPagination && (
+          <div className="table-pagination flex items-center justify-center space-x-4 mt-4">
+            <button
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              className="px-3 py-1.5 bg-black text-white rounded-lg disabled:bg-gray-300 disabled:text-gray-500 hover:bg-gray-600 transition-colors"
+            >
+              {"<"}
+            </button>
+            <span className="text-sm text-gray-700">
+              {`${
+                table.getState().pagination.pageIndex + 1
+              } of ${table.getPageCount()}`}
+            </span>
+            <button
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="px-3 py-1.5 bg-black text-white rounded-lg disabled:bg-gray-300 disabled:text-gray-500 hover:bg-gray-600 transition-colors"
+            >
+              {">"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
