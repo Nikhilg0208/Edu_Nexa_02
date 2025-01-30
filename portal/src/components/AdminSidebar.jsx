@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
 import {
-  FaTrophy,
-  FaUser,
   FaChevronLeft,
   FaChevronRight,
+  FaDiscourse,
+  FaUser,
 } from "react-icons/fa";
 import { TbCategoryFilled } from "react-icons/tb";
+import { Link, useLocation } from "react-router-dom";
 
 const AdminSidebar = () => {
   const location = useLocation();
@@ -46,22 +46,22 @@ const AdminSidebar = () => {
       <div className="flex-col flex space-y-2">
         {/* User Section */}
         <Link
-          to="/admin/dashboard/user"
-          onClick={() => handleSetActive("/admin/dashboard/user")}
+          to="/admin/dashboard/users"
+          onClick={() => handleSetActive("/admin/dashboard/users")}
         >
           <div
             className={`flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 ${
-              activeSection === "/admin/dashboard/user"
-                ? "bg-blue-600"
+              activeSection === "/admin/dashboard/users"
+                ? "bg-blue-400"
                 : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
             <FaUser className="text-blue-400 text-2xl" />
-            {!isCollapsed && <h3 className="text-xl font-semibold">User</h3>}
+            {!isCollapsed && <h3 className="text-xl font-semibold">Users</h3>}
           </div>
         </Link>
 
-        {/*Course Categories*/}
+        {/*Categories*/}
         <Link
           to="/admin/dashboard/categories"
           onClick={() => handleSetActive("/admin/dashboard/categories")}
@@ -69,7 +69,7 @@ const AdminSidebar = () => {
           <div
             className={`flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 ${
               activeSection === "/admin/dashboard/categories"
-                ? "bg-green-600"
+                ? "bg-green-400"
                 : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
@@ -80,22 +80,20 @@ const AdminSidebar = () => {
           </div>
         </Link>
 
-        {/* Challenge Section */}
+        {/* courses Section */}
         <Link
-          to="/admin/dashboard/challenge"
-          onClick={() => handleSetActive("/admin/dashboard/challenge")}
+          to="/admin/dashboard/courses"
+          onClick={() => handleSetActive("/admin/dashboard/courses")}
         >
           <div
             className={`flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 ${
-              activeSection === "/admin/dashboard/challenge"
-                ? "bg-yellow-600"
+              activeSection === "/admin/dashboard/courses"
+                ? "bg-yellow-400"
                 : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
-            <FaTrophy className="text-yellow-400 text-2xl" />
-            {!isCollapsed && (
-              <h3 className="text-xl font-semibold">Challenge</h3>
-            )}
+            <FaDiscourse className="text-yellow-400 text-2xl" />
+            {!isCollapsed && <h3 className="text-xl font-semibold">Courses</h3>}
           </div>
         </Link>
       </div>

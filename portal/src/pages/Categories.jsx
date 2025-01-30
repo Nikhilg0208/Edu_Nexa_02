@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteForever } from "react-icons/md";
+import { useSelector } from "react-redux";
 import AdminSidebar from "../components/AdminSidebar";
+import Loader from "../components/common/Loader";
+import Table from "../components/common/Table";
 import {
-  useGetCategoryQuery,
-  useDeleteCategoryMutation,
   useCreateCategoryMutation,
+  useDeleteCategoryMutation,
+  useGetCategoryQuery,
   useUpdateCategoryMutation,
 } from "../redux/api/categoryAPI";
-import { MdDeleteForever } from "react-icons/md";
-import { CiEdit } from "react-icons/ci";
-import Table from "../components/common/Table";
-import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
-import Loader from "../components/common/Loader";
 
 const columns = [
   {

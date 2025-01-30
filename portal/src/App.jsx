@@ -6,8 +6,8 @@ import ProtectedRoute from "./components/common/Protected-route";
 const Login = lazy(() => import("./pages/Login"));
 const Dashboard = lazy(() => import("./components/AdminSidebar"));
 const Categories = lazy(() => import("./pages/Categories"));
-// const Challenge = lazy(() => import("./pages/Challenge"));
-// const User = lazy(() => import("./pages/User"));
+const Courses = lazy(() => import("./pages/Courses"));
+const Users = lazy(() => import("./pages/Users"));
 function App() {
   return (
     <>
@@ -31,22 +31,22 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* <Route
-              path="/admin/dashboard/challenge"
+            <Route
+              path="/admin/dashboard/courses"
               element={
                 <ProtectedRoute>
-                  <Challenge />
+                  <Courses />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/admin/dashboard/user"
+              path="/admin/dashboard/users"
               element={
                 <ProtectedRoute>
-                  <User />
+                  <Users />
                 </ProtectedRoute>
               }
-            />{" "} */}
+            />
           </Routes>
         </Suspense>
       </Router>
