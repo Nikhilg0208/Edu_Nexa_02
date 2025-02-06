@@ -1,4 +1,3 @@
-import React from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -6,6 +5,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import React from "react";
 import {
   AiOutlineSortAscending,
   AiOutlineSortDescending,
@@ -31,23 +31,18 @@ const Table = ({ columns, data, heading, showPagination = false }) => {
     <div className="p-4 bg-white rounded-lg overflow-hidden">
       <h2 className="text-xl font-bold text-black mb-4">{heading}</h2>
       <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-200 shadow-sm rounded-lg">
+        <table className="min-w-full table-auto border border-gray-200 shadow-sm rounded-lg">
           <thead className="bg-gray-100 text-gray-700 uppercase text-sm">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className="border-b border-gray-200">
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="relative px-4 py-3 text-left font-medium group cursor-pointer select-none"
+                    className="relative px-4 py-3 text-left font-medium group cursor-pointer select-none min-w-0"
                     style={{ width: header.getSize() }}
-                    onClick={
-                      header.column.getCanSort()
-                        ? header.column.getToggleSortingHandler()
-                        : undefined
-                    }
                   >
                     <div className="flex items-center justify-between">
-                      <span className="flex-1">
+                      <span className="flex-1 truncate">
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext()
@@ -67,13 +62,14 @@ const Table = ({ columns, data, heading, showPagination = false }) => {
                       )}
                     </div>
 
+                    {/* Resizable Handler */}
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}
                       className={`absolute top-0 right-0 h-full w-[4px] cursor-col-resize ${
                         header.column.getIsResizing()
                           ? "bg-green-500"
-                          : "bg-black opacity-0 group-hover:opacity-100"
+                          : "bg-transparent hover:bg-gray-400"
                       }`}
                     ></div>
                   </th>
@@ -89,7 +85,13 @@ const Table = ({ columns, data, heading, showPagination = false }) => {
                   className="border-b border-gray-200 hover:bg-gray-50 transition"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="px-4 py-3 text-gray-700">
+                    <td
+                      key={cell.id}
+                      className="px-4 py-3 text-gray-700 break-words whitespace-normal min-w-0"
+                      style={{
+                        wordBreak: "break-word",
+                      }}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

@@ -132,10 +132,6 @@ const Categories = () => {
     });
   }, [allCategories]);
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
   if (isError) {
     return (
       <div className="text-center p-4 text-red-500">
@@ -208,18 +204,22 @@ const Categories = () => {
           </form>
         )}
 
-        <div className="bg-white shadow-md rounded-lg p-4 max-h-[400px] overflow-y-auto">
-          {allCategories.length > 0 ? (
-            <Table
-              columns={columns}
-              data={rows}
-              heading="All Categories"
-              showPagination={true}
-            />
-          ) : (
-            <p className="text-center text-gray-500">No categories found.</p>
-          )}
-        </div>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <div className="bg-white shadow-md rounded-lg p-4 max-h-[400px] overflow-y-auto">
+            {rows?.length > 0 ? (
+              <Table
+                columns={columns}
+                data={rows}
+                heading="All Categories"
+                showPagination={true}
+              />
+            ) : (
+              <p className="text-center text-gray-500">No categories found.</p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

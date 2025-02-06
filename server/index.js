@@ -1,9 +1,9 @@
 import express from "express";
-import contactUsRoute from "./routes/contact.js";
+import contactUsRoute from "./routes/contact-us.js";
 import courseRoutes from "./routes/course.js";
 import paymentRoutes from "./routes/payments.js";
 import profileRoutes from "./routes/profile.js";
-import userRoutes from "./routes/user.js";
+import authRoutes from "./routes/auth.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -12,6 +12,7 @@ import fileUpload from "express-fileupload";
 import { cloudinaryConnect } from "./config/cloudinary.js";
 import { connect } from "./config/database.js";
 import { initializeRedis } from "./config/redis.js";
+import userRoutes from "./routes/user.js";
 
 const app = express();
 
@@ -54,7 +55,8 @@ app.use(
 
 cloudinaryConnect();
 
-app.use("/api/v1/auth", userRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/payment", paymentRoutes);

@@ -2,8 +2,8 @@ import express from "express";
 import {
   capturePayment,
   sendPaymentSuccessEmail,
+  verifyPayment,
 } from "../controllers/payments.js";
-import { verifyPayment } from "../controllers/payments.js";
 import { auth } from "../middleware/auth.js";
 
 const paymentRoutes = express.Router();
