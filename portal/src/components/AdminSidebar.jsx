@@ -6,12 +6,17 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { TbCategoryFilled } from "react-icons/tb";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FiLogOut } from "react-icons/fi";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/reducer/authReducer";
 
 const AdminSidebar = () => {
   const location = useLocation();
   const [activeSection, setActiveSection] = useState(location.pathname);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSetActive = (path) => {
     setActiveSection(path);
@@ -20,10 +25,15 @@ const AdminSidebar = () => {
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success("Logged Out Successfully");
+    navigate("/");
+  };
 
   return (
     <div
-      className={`h-screen bg-gray-900 text-white ${
+      className={`h-screen flex flex-col bg-gray-900 text-white ${
         isCollapsed ? "min-w-14" : "min-w-58"
       } transition-all duration-300`}
     >
@@ -35,16 +45,12 @@ const AdminSidebar = () => {
       </div>
 
       {/* Sidebar Header */}
-      <h2
-        className={`text-3xl font-bold text-center mb-8 border-b border-gray-700 pb-4 max-h-14 `}
-      >
-        {isCollapsed && <p>A</p>}
-        <p className={isCollapsed ? "hidden" : ""}>Admin Panel</p>
+      <h2 className="text-3xl font-bold text-center mb-8 border-b border-gray-700 pb-4">
+        {isCollapsed ? <p>A</p> : <p>Admin Panel</p>}
       </h2>
 
-      {/* Sidebar Menu */}
-      <div className="flex-col flex space-y-2">
-        {/* User Section */}
+      {/* Sidebar Menu (Takes up Remaining Space) */}
+      <div className="flex flex-col space-y-2 flex-grow">
         <Link
           to="/admin/dashboard/users"
           onClick={() => handleSetActive("/admin/dashboard/users")}
@@ -61,7 +67,6 @@ const AdminSidebar = () => {
           </div>
         </Link>
 
-        {/*Categories*/}
         <Link
           to="/admin/dashboard/categories"
           onClick={() => handleSetActive("/admin/dashboard/categories")}
@@ -80,7 +85,6 @@ const AdminSidebar = () => {
           </div>
         </Link>
 
-        {/* courses Section */}
         <Link
           to="/admin/dashboard/courses"
           onClick={() => handleSetActive("/admin/dashboard/courses")}
@@ -97,6 +101,14 @@ const AdminSidebar = () => {
           </div>
         </Link>
       </div>
+
+      {/* Logout Button (Always at the Bottom) */}
+      <button onClick={handleLogout} className="w-full text-left mt-auto">
+        <div className="flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 bg-gray-800 hover:bg-gray-700">
+          <FiLogOut className="text-red-400 text-2xl" />
+          {!isCollapsed && <h3 className="text-xl font-semibold">Log Out</h3>}
+        </div>
+      </button>
     </div>
   );
 };

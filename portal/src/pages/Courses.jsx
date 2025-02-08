@@ -3,8 +3,9 @@ import AdminSidebar from "../components/AdminSidebar";
 
 const Courses = () => {
   return (
-    <div>
+    <div className="flex">
       <AdminSidebar />
+      <div></div>
     </div>
   );
 };
