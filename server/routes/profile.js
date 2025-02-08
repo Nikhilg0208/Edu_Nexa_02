@@ -1,7 +1,6 @@
 import express from "express";
 import { auth, isInstructor } from "../middleware/auth.js";
 import {
-  deleteAccount,
   updateProfile,
   getAllUserDetails,
   updateDisplayPicture,
