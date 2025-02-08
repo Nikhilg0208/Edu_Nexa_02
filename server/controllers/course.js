@@ -107,7 +107,7 @@ export const createCourse = async (req, res) => {
       { new: true }
     );
 
-    await redis.del("allcourses");
+    await Promise.all([redis.del("allcourses"), redis.del("categories")]);
 
     res.status(200).json({
       data: newCourse,
@@ -125,8 +125,8 @@ export const createCourse = async (req, res) => {
 // Edit Course Details
 export const editCourse = async (req, res) => {
   try {
-    const { courseId } = req.body;
-    const updates = req.body;
+    const { courseId, ...updates } = req.body;
+
     const course = await Course.findById(courseId);
 
     if (!course) {
@@ -134,47 +134,38 @@ export const editCourse = async (req, res) => {
     }
 
     // If Thumbnail Image is found, update it
-    if (req.files) {
+    if (req.files?.thumbnailImage) {
       const thumbnail = req.files.thumbnailImage;
       const thumbnailImage = await uploadImageToCloudinary(
         thumbnail,
         process.env.FOLDER_NAME
       );
-      course.thumbnail = thumbnailImage.secure_url;
+      updates.thumbnail = thumbnailImage.secure_url;
     }
 
     // Update only the fields that are present in the request body
-    for (const key in updates) {
-      if (updates.hasOwnProperty(key)) {
-        if (key === "tag" || key === "instructions") {
-          course[key] = JSON.parse(updates[key]);
-        } else {
-          course[key] = updates[key];
-        }
-      }
-    }
+    if (updates.tag) updates.tag = JSON.parse(updates.tag);
+    if (updates.instructions)
+      updates.instructions = JSON.parse(updates.instructions);
 
-    await course.save();
-
-    const updatedCourse = await Course.findOne({
-      _id: courseId,
-    })
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseId,
+      { $set: updates },
+      { new: true }
+    )
       .populate({
         path: "instructor",
-        populate: {
-          path: "additionalDetails",
-        },
+        populate: { path: "additionalDetails" },
       })
       .populate("category")
       .populate("ratingAndReviews")
       .populate({
         path: "courseContent",
-        populate: {
-          path: "subSection",
-        },
+        populate: { path: "subSection" },
       })
       .exec();
-    await redis.del("allcourses");
+
+    await Promise.all([redis.del("allcourses"), redis.del("categories")]);
 
     res.status(200).json({
       message: "Course updated successfully",
@@ -389,37 +380,36 @@ export const deleteCourse = async (req, res) => {
     }
 
     // Unenroll students from the course
-    const studentsEnrolled = course.studentsEnroled;
-    for (const studentId of studentsEnrolled) {
-      await User.findByIdAndUpdate(studentId, {
+    await User.updateMany(
+      { _id: { $in: course.studentsEnroled } },
+      { $pull: { courses: courseId } }
+    );
+
+    // Delete related Course Progress, Ratings, and Reviews
+    await Promise.all([
+      CourseProgress.deleteMany({ courseID: courseId }),
+      RatingAndReview.deleteMany({ course: courseId }),
+      Category.findByIdAndUpdate(course.category, {
         $pull: { courses: courseId },
-      });
-    }
+      }),
+    ]);
 
-    // Delete sections and sub-sections
-    const courseSections = course.courseContent;
-    for (const sectionId of courseSections) {
-      // Delete sub-sections of the section
-      const section = await Section.findById(sectionId);
-      if (section) {
-        const subSections = section.subSection;
-        for (const subSectionId of subSections) {
-          await SubSection.findByIdAndDelete(subSectionId);
-        }
-      }
+    // Delete sections and their sub-sections efficiently
+    const sections = await Section.find({ _id: { $in: course.courseContent } });
 
-      // Delete the section
-      await Section.findByIdAndDelete(sectionId);
-    }
+    const subSectionIds = sections.flatMap((section) => section.subSection);
+    await Promise.all([
+      SubSection.deleteMany({ _id: { $in: subSectionIds } }),
+      Section.deleteMany({ _id: { $in: course.courseContent } }),
+    ]);
 
     // Delete the course
     await Course.findByIdAndDelete(courseId);
 
-    await redis.del("allcourses");
+    // Clear Redis cache
+    await Promise.all([redis.del("allcourses"), redis.del("categories")]);
 
-    return res.status(200).json({
-      message: "Course deleted successfully",
-    });
+    return res.status(200).json({ message: "Course deleted successfully" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({

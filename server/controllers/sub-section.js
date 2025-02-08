@@ -14,7 +14,6 @@ export const createSubSection = async (req, res) => {
         .status(404)
         .json({ success: false, message: "All Fields are Required" });
     }
-   
 
     // Upload the video file to Cloudinary
     const uploadDetails = await uploadImageToCloudinary(
@@ -36,6 +35,8 @@ export const createSubSection = async (req, res) => {
       { $push: { subSection: SubSectionDetails._id } },
       { new: true }
     ).populate("subSection");
+
+    await redis.del("allcourses");
 
     // Return the updated section in the response
     return res.status(200).json({ success: true, data: updatedSection });
@@ -86,7 +87,7 @@ export const updateSubSection = async (req, res) => {
       "subSection"
     );
 
-  
+    await redis.del("allcourses");
 
     return res.json({
       success: true,
@@ -127,6 +128,7 @@ export const deleteSubSection = async (req, res) => {
     const updatedSection = await Section.findById(sectionId).populate(
       "subSection"
     );
+    await redis.del("allcourses");
 
     return res.json({
       success: true,

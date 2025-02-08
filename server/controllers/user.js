@@ -1,3 +1,4 @@
+import { redis } from "../config/redis.js";
 import { Category } from "../models/Category.js";
 import { Course } from "../models/Course.js";
 import { CourseProgress } from "../models/CourseProgress.js";
@@ -63,6 +64,7 @@ export const deleteUser = async (req, res) => {
           { courses: course._id },
           { $pull: { courses: course._id } }
         );
+        await Promise.all([redis.del("allcourses"), redis.del("categories")]);
         await Section.deleteMany({ _id: { $in: course.courseContent } });
         await Course.findByIdAndDelete(course._id);
       }

@@ -1,5 +1,7 @@
+import { redis } from "../config/redis.js";
 import { Course } from "../models/Course.js";
 import { Section } from "../models/Section.js";
+import { SubSection } from "../models/Subsection.js";
 
 // CREATE a new section
 export const createSection = async (req, res) => {
@@ -36,6 +38,8 @@ export const createSection = async (req, res) => {
       })
       .exec();
 
+    await redis.del("allcourses");
+
     // Return the updated course object in the response
     res.status(200).json({
       success: true,
@@ -69,6 +73,8 @@ export const updateSection = async (req, res) => {
         },
       })
       .exec();
+
+    await redis.del("allcourses");
 
     res.status(200).json({
       success: true,
@@ -116,6 +122,8 @@ export const deleteSection = async (req, res) => {
         },
       })
       .exec();
+
+    await redis.del("allcourses");
 
     res.status(200).json({
       success: true,
