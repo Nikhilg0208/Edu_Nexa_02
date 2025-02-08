@@ -29,6 +29,7 @@ export const getAllUsers = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     let userId;
+    console.log("user");
     if (req.user.role !== "Admin") {
       userId = req.user.id;
     } else {

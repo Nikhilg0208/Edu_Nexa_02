@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AdminSidebar from "../components/AdminSidebar";
-import { useGetUsersQuery } from "../redux/api/userAPI";
+import { useDeleteUserMutation, useGetUsersQuery } from "../redux/api/userAPI";
 import { useSelector } from "react-redux";
 import Loader from "../components/common/Loader";
 import { MdDeleteForever } from "react-icons/md";
@@ -15,12 +15,12 @@ const columns = [
     enableSorting: false,
   },
   {
-    header: "FirstName",
+    header: "First Name",
     accessorKey: "firstName",
     cell: (props) => <p>{props.getValue()}</p>,
   },
   {
-    header: "LastName",
+    header: "Last Name",
     accessorKey: "lastName",
     cell: (props) => <p>{props.getValue()}</p>,
   },
@@ -35,7 +35,7 @@ const columns = [
     cell: (props) => <p>{props.getValue()}</p>,
   },
   {
-    header: "ContactNumber",
+    header: "Contact Number",
     accessorKey: "contactNumber",
     cell: (props) => <p>{props.getValue()}</p>,
   },
@@ -51,9 +51,13 @@ const columns = [
     enableSorting: false,
   },
 ];
+
 const Users = () => {
   const [rows, setRows] = useState([]);
+  const [modal, setModal] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null); // Store user ID
   const { token } = useSelector((state) => state.auth);
+  const [deleteUser] = useDeleteUserMutation();
   const { isLoading, isError, data } = useGetUsersQuery({ token });
 
   if (isError) {
@@ -62,16 +66,34 @@ const Users = () => {
 
   const allUsers = data?.data || [];
 
+  const deleteHandler = (id) => {
+    setSelectedUserId(id); // Set user ID
+    setModal(true);
+  };
+
+  const confirmDeleteHandler = async () => {
+    if (!selectedUserId) return;
+
+    try {
+      const res = await deleteUser({ userId: selectedUserId, token }).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+      } else {
+        toast.error(res?.message);
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || "Error deleting user");
+    } finally {
+      setModal(false);
+      setSelectedUserId(null);
+    }
+  };
+
   useEffect(() => {
     const newRows = allUsers.map((i) => ({
       image: (
         <img
-          style={{
-            borderRadius: "50%",
-            width: "100px",
-            height: "100px",
-            objectFit: "cover",
-          }}
+          className="w-24 h-24 rounded-full object-cover"
           src={
             i?.image ||
             "https://lh3.googleusercontent.com/a/ACg8ocKRaLn2csmYEv6a9duVAS0TQH_nFFJVPlhECmx2MHXqU3V7TQ=s96-c"
@@ -86,9 +108,9 @@ const Users = () => {
       contactNumber: i?.additionalDetails?.contactNumber || "N/A",
       accountType: i?.accountType || "N/A",
       actions: (
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div className="flex gap-3">
           <button className="hover:text-red-500">
-            <MdDeleteForever size={25} />
+            <MdDeleteForever size={25} onClick={() => deleteHandler(i._id)} />
           </button>
         </div>
       ),
@@ -101,9 +123,15 @@ const Users = () => {
   }, [allUsers]);
 
   return (
-    <div className="flex flex-row w-full min-h-screen">
+    <div className="relative flex flex-row w-full min-h-screen">
       <AdminSidebar />
-      <div className="w-full flex-1 bg-gray-100 overflow-hidden">
+
+      {/* Blur effect when modal is open */}
+      <div
+        className={`w-full flex-1 bg-gray-100 overflow-hidden transition-all duration-300 ${
+          modal ? "blur-sm" : ""
+        }`}
+      >
         {isLoading ? (
           <Loader />
         ) : (
@@ -121,6 +149,36 @@ const Users = () => {
           </div>
         )}
       </div>
+
+      {/* Confirmation Modal */}
+      {modal && (
+        <div
+          className="margin:0 paddin:0 box-sizing:border-box absolute flex flex-col items-center justify-center bg-gray-900 max-w-md p-6 rounded-lg shadow-2xl border border-gray-300"
+          style={{
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          <h1 className="text-xl font-semibold text-white text-center mb-4">
+            Are you sure? This will delete the user and all related data.
+          </h1>
+          <div className="flex gap-4 mt-2">
+            <button
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-5 py-2 rounded-md transition duration-300"
+              onClick={() => setModal(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-md transition duration-300"
+              onClick={confirmDeleteHandler}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

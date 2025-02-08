@@ -7,16 +7,16 @@ export const userAPI = createApi({
   }),
   tagTypes: ["userApi"],
   endpoints: (builder) => ({
-    // deleteCategory: builder.mutation({
-    //   query: ({ categoryId, token }) => ({
-    //     url: `user/${categoryId}`,
-    //     method: "DELETE",
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   }),
-    //   invalidatesTags: ["categoryApi"],
-    // }),
+    deleteUser: builder.mutation({
+      query: ({ userId, token }) => ({
+        url: `${userId}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: ["userApi"],
+    }),
     getUsers: builder.query({
       query: ({ token }) => ({
         url: "all-users",
@@ -30,4 +30,4 @@ export const userAPI = createApi({
   }),
 });
 
-export const { useGetUsersQuery } = userAPI;
+export const { useGetUsersQuery, useDeleteUserMutation } = userAPI;
