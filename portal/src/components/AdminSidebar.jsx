@@ -34,7 +34,7 @@ const AdminSidebar = () => {
   return (
     <div
       className={`h-screen flex flex-col bg-gray-900 text-white ${
-        isCollapsed ? "min-w-14" : "min-w-58"
+        isCollapsed ? "min-w-14" : "min-w-58 max-w-58"
       } transition-all duration-300`}
     >
       {/* Toggle Button */}
