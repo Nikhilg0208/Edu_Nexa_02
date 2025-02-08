@@ -11,7 +11,6 @@ import {
 
 const profileRoutes = express.Router();
 
-// Delet User Account
 profileRoutes.put("/updateProfile", auth, updateProfile);
 profileRoutes.get("/getUserDetails", auth, getAllUserDetails);
 // Get Enrolled Courses

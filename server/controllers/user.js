@@ -27,7 +27,12 @@ export const getAllUsers = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   try {
-    const userId = req.params.userId || req.user.id;
+    let userId;
+    if (req.user.role !== "Admin") {
+      userId = req.user.id;
+    } else {
+      userId = req.params.userId;
+    }
     const user = await User.findById(userId);
     if (!user) {
       return res
