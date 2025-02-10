@@ -5,6 +5,7 @@ import {
   deleteCourse,
   editCourse,
   getAllCourses,
+  getAllFullCourseDetails,
   getCourseDetails,
   getFullCourseDetails,
   getInstructorCourses,
@@ -59,6 +60,8 @@ courseRoutes.get(
 courseRoutes.get("/getAllCourses", getAllCourses);
 courseRoutes.get("/getCourseDetails", getCourseDetails);
 courseRoutes.get("/getFullCourseDetails", auth, getFullCourseDetails);
+
+courseRoutes.get("/getAllFullCourseDetails", auth, isAdmin, getAllFullCourseDetails);
 courseRoutes.post(
   "/updateCourseProgress",
   auth,

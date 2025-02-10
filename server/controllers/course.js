@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { redis } from "../config/redis.js";
 import { Category } from "../models/Category.js";
 import { Course } from "../models/Course.js";
@@ -183,7 +184,7 @@ export const editCourse = async (req, res) => {
 export const getAllCourses = async (req, res) => {
   try {
     const cachedData = await redis.get("allcourses");
-    
+
     if (cachedData) {
       return res.status(200).json({
         data: JSON.parse(cachedData),
@@ -221,7 +222,7 @@ export const getAllCourses = async (req, res) => {
 
 export const getCourseDetails = async (req, res) => {
   try {
-    const { courseId } = req.body;
+    const courseId = req.query.courseId;
     const courseDetails = await Course.findOne({
       _id: courseId,
     })
@@ -281,11 +282,11 @@ export const getCourseDetails = async (req, res) => {
 
 export const getFullCourseDetails = async (req, res) => {
   try {
-    const { courseId } = req.body;
+    const courseId = req.query.courseId;
     const userId = req.user.id;
-
     const courseDetails = await Course.findOne({
       _id: courseId,
+      $or: [{ studentsEnroled: userId }, { instructor: userId }],
     })
       .populate({
         path: "instructor",
@@ -418,6 +419,99 @@ export const deleteCourse = async (req, res) => {
     return res.status(500).json({
       message: "Server error",
       error: error.message,
+    });
+  }
+};
+
+export const getAllFullCourseDetails = async (req, res) => {
+  try {
+    const { category } = req.query;
+    let filter = {};
+
+    if (category) {
+      const categoryData = await Category.findOne({ name: category });
+      if (categoryData?._id) {
+        filter.category = categoryData._id;
+      }
+    }
+    const courses = await Course.find(filter)
+      .populate({
+        path: "instructor",
+        populate: {
+          path: "additionalDetails",
+        },
+        select: "-password -courseProgress -image",
+      })
+      .populate("category")
+      .populate({
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+        },
+      })
+      .populate({
+        path: "ratingAndReviews",
+        select: "rating",
+      })
+      .exec();
+
+    if (!courses || courses.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No courses found",
+      });
+    }
+
+    const courseDetails = courses.map((course) => {
+      let totalDurationInSeconds = 0;
+      let totalRatings = 0;
+      let totalReviewCount = course.ratingAndReviews.length;
+      let totalStudentsEnrolled = course.studentsEnroled.length;
+
+      course.courseContent.forEach((content) => {
+        content.subSection.forEach((subSection) => {
+          const timeDurationInSeconds = parseInt(subSection.timeDuration) || 0;
+          totalDurationInSeconds += timeDurationInSeconds;
+        });
+      });
+
+      if (totalReviewCount > 0) {
+        totalRatings = course.ratingAndReviews.reduce(
+          (sum, review) => sum + review.rating,
+          0
+        );
+      }
+      const averageRating =
+        totalReviewCount > 0 ? totalRatings / totalReviewCount : 0;
+
+      return {
+        _id: course._id,
+        courseName: course.courseName,
+        courseDescription: course.courseDescription,
+        instructor: course.instructor,
+        whatYouWillLearn: course.whatYouWillLearn,
+        courseContent: course.courseContent,
+        price: course.price,
+        thumbnail: course.thumbnail,
+        tag: course.tag,
+        category: course.category,
+        instructions: course.instructions,
+        status: course.status,
+        createdAt: course.createdAt,
+        totalDuration: convertSecondsToDuration(totalDurationInSeconds),
+        totalStudentsEnrolled,
+        totalReviewCount,
+        averageRating: averageRating.toFixed(2),
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: courseDetails,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
     });
   }
 };
