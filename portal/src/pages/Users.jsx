@@ -6,6 +6,7 @@ import Loader from "../components/common/Loader";
 import { MdDeleteForever } from "react-icons/md";
 import Table from "../components/common/Table";
 import toast from "react-hot-toast";
+import ConfirmationModal from "../components/common/ConfirmationModal";
 
 const columns = [
   {
@@ -55,7 +56,7 @@ const columns = [
 const Users = () => {
   const [rows, setRows] = useState([]);
   const [modal, setModal] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null); // Store user ID
+  const [selectedUserId, setSelectedUserId] = useState(null); 
   const { token } = useSelector((state) => state.auth);
   const [deleteUser] = useDeleteUserMutation();
   const { isLoading, isError, data } = useGetUsersQuery({ token });
@@ -125,7 +126,6 @@ const Users = () => {
   return (
     <div className="relative flex flex-row w-full min-h-screen">
       <AdminSidebar />
-
       {/* Blur effect when modal is open */}
       <div
         className={`w-full flex-1 bg-gray-100 overflow-hidden transition-all duration-300 ${
@@ -149,36 +149,13 @@ const Users = () => {
           </div>
         )}
       </div>
-
       {/* Confirmation Modal */}
-      {modal && (
-        <div
-          className="margin:0 paddin:0 box-sizing:border-box absolute flex flex-col items-center justify-center bg-gray-900 max-w-md p-6 rounded-lg shadow-2xl border border-gray-300"
-          style={{
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          <h1 className="text-xl font-semibold text-white text-center mb-4">
-            Are you sure? This will delete the user and all related data.
-          </h1>
-          <div className="flex gap-4 mt-2">
-            <button
-              className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-5 py-2 rounded-md transition duration-300"
-              onClick={() => setModal(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-md transition duration-300"
-              onClick={confirmDeleteHandler}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      )}
+      <ConfirmationModal
+        isOpen={modal}
+        onClose={() => setModal(false)}
+        onConfirm={confirmDeleteHandler}
+        message="Are you sure? This will delete the user and all related data."
+      />
     </div>
   );
 };

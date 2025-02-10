@@ -25,14 +25,22 @@ const Login = () => {
         email: email,
         password: password,
       });
+
       if (res.data.success && res.data) {
-        toast.success(res.data.message);
-        setEmail("");
-        setPassword("");
-        const token = res.data.token;
-        localStorage.setItem("token", token);
-        dispatch(setAuth({ token }));
-        navigate("/admin/dashboard");
+        const role = res?.data?.user?.accountType;
+        if (role !== "Admin") {
+          toast.error("You are not an admin");
+          setEmail("");
+          setPassword("");
+        } else {
+          toast.success(res.data.message);
+          setEmail("");
+          setPassword("");
+          const token = res.data.token;
+          localStorage.setItem("token", token);
+          dispatch(setAuth({ token }));
+          navigate("/admin/dashboard");
+        }
       } else {
         const error = res.error;
         const message = error.dat.message;

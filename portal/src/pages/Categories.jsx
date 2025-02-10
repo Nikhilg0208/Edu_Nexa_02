@@ -12,6 +12,7 @@ import {
   useGetCategoryQuery,
   useUpdateCategoryMutation,
 } from "../redux/api/categoryAPI";
+import ConfirmationModal from "../components/common/ConfirmationModal";
 
 const columns = [
   {
@@ -34,6 +35,8 @@ const columns = [
 
 const Categories = () => {
   const { isLoading, isError, data } = useGetCategoryQuery();
+  const [modal, setModal] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
   const [deleteCategory] = useDeleteCategoryMutation();
   const [createCategory] = useCreateCategoryMutation();
   const [updateCategory] = useUpdateCategoryMutation();
@@ -47,6 +50,13 @@ const Categories = () => {
   const { token } = useSelector((state) => state.auth);
 
   const deleteHandler = async (id) => {
+    setSelectedUserId(id);
+    setModal(true);
+  };
+
+  const confirmDeleteHandler = async () => {
+    if (!selectedUserId) return;
+
     try {
       const res = await deleteCategory({ categoryId: id, token }).unwrap();
       if (res?.success) {
@@ -56,6 +66,9 @@ const Categories = () => {
       }
     } catch (error) {
       toast.error(error?.data?.message || "Error deleting category");
+    } finally {
+      setModal(false);
+      setSelectedUserId(null);
     }
   };
 
@@ -143,7 +156,11 @@ const Categories = () => {
   return (
     <div className="flex flex-row w-full min-h-screen">
       <AdminSidebar />
-      <div className="w-full flex-1 flex flex-col bg-gray-100 p-6">
+      <div
+        className={`w-full flex-1 flex flex-col bg-gray-100 p-6 ${
+          modal ? "blur-sm" : ""
+        }`}
+      >
         <div className="flex justify-end mb-4">
           <button
             className="bg-amber-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-amber-600"
@@ -221,6 +238,12 @@ const Categories = () => {
           </div>
         )}
       </div>
+      <ConfirmationModal
+        isOpen={modal}
+        onClose={() => setModal(false)}
+        onConfirm={confirmDeleteHandler}
+        message="Are you sure? This will delete the Category."
+      />
     </div>
   );
 };

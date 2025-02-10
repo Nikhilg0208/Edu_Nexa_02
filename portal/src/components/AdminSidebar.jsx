@@ -10,6 +10,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FiLogOut } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/reducer/authReducer";
+import { MdOutlineDashboardCustomize } from "react-icons/md";
 
 const AdminSidebar = () => {
   const location = useLocation();
@@ -34,7 +35,7 @@ const AdminSidebar = () => {
   return (
     <div
       className={`h-screen flex flex-col bg-gray-900 text-white ${
-        isCollapsed ? "min-w-14" : "min-w-58 max-w-58"
+        isCollapsed ? "min-w-14 max-w-14" : "min-w-58 max-w-58"
       } transition-all duration-300`}
     >
       {/* Toggle Button */}
@@ -45,12 +46,33 @@ const AdminSidebar = () => {
       </div>
 
       {/* Sidebar Header */}
-      <h2 className="text-3xl font-bold text-center mb-8 border-b border-gray-700 pb-4">
-        {isCollapsed ? <p>A</p> : <p>Admin Panel</p>}
+      <h2
+        className="text-2xl font-bold text-center mb-8 border-b border-gray-700 pb-4 cursor-pointer"
+        onClick={() => navigate("/admin/dashboard")}
+      >
+        {isCollapsed ? "A" : "Admin Panel"}
       </h2>
 
       {/* Sidebar Menu (Takes up Remaining Space) */}
       <div className="flex flex-col space-y-2 flex-grow">
+        <Link
+          to="/admin/dashboard"
+          onClick={() => handleSetActive("/admin/dashboard")}
+        >
+          <div
+            className={`flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 ${
+              activeSection === "/admin/dashboard"
+                ? "bg-gray-700"
+                : "bg-gray-800 hover:bg-gray-700"
+            }`}
+          >
+            <MdOutlineDashboardCustomize className="text-black text-2xl" />
+            {!isCollapsed && (
+              <h3 className="text-xl font-semibold">Dashboard</h3>
+            )}
+          </div>
+        </Link>
+
         <Link
           to="/admin/dashboard/users"
           onClick={() => handleSetActive("/admin/dashboard/users")}
@@ -58,7 +80,7 @@ const AdminSidebar = () => {
           <div
             className={`flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 ${
               activeSection === "/admin/dashboard/users"
-                ? "bg-blue-400"
+                ? "bg-gray-700"
                 : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
@@ -74,7 +96,7 @@ const AdminSidebar = () => {
           <div
             className={`flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 ${
               activeSection === "/admin/dashboard/categories"
-                ? "bg-green-400"
+                ? "bg-gray-700"
                 : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
@@ -92,7 +114,7 @@ const AdminSidebar = () => {
           <div
             className={`flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 ${
               activeSection === "/admin/dashboard/courses"
-                ? "bg-yellow-400"
+                ? "bg-gray-700"
                 : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
