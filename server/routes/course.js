@@ -57,8 +57,8 @@ courseRoutes.get(
   getInstructorCourses
 );
 courseRoutes.get("/getAllCourses", getAllCourses);
-courseRoutes.post("/getCourseDetails", getCourseDetails);
-courseRoutes.post("/getFullCourseDetails", auth, getFullCourseDetails);
+courseRoutes.get("/getCourseDetails", getCourseDetails);
+courseRoutes.get("/getFullCourseDetails", auth, getFullCourseDetails);
 courseRoutes.post(
   "/updateCourseProgress",
   auth,

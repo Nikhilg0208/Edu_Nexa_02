@@ -112,11 +112,11 @@ export const getAllRatingReview = async (req, res) => {
       .sort({ rating: "desc" })
       .populate({
         path: "user",
-        select: "firstName lastName email image", // Specify the fields you want to populate from the "Profile" model
+        select: "firstName lastName email image",
       })
       .populate({
         path: "course",
-        select: "courseName", //Specify the fields you want to populate from the "Course" model
+        select: "courseName",
       })
       .exec();
     res.status(200).json({

@@ -183,6 +183,7 @@ export const editCourse = async (req, res) => {
 export const getAllCourses = async (req, res) => {
   try {
     const cachedData = await redis.get("allcourses");
+    
     if (cachedData) {
       return res.status(200).json({
         data: JSON.parse(cachedData),
@@ -206,11 +207,13 @@ export const getAllCourses = async (req, res) => {
     await redis.set("allcourses", JSON.stringify(allCourses), "EX", 604800);
 
     return res.status(200).json({
+      success: true,
       data: allCourses,
     });
   } catch (error) {
     return res.status(404).json({
       message: `Can't Fetch Course Data`,
+      success: false,
       error: error.message,
     });
   }
