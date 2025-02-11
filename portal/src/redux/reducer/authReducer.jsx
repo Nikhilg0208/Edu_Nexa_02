@@ -39,7 +39,6 @@ export const authReducer = createSlice({
         state.token = token;
         state.role = decodedToken.role || null;
         state.isAuthenticated = true;
-
         localStorage.setItem("token", token);
       } catch (error) {
         console.error("Invalid token:", error);
