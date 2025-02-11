@@ -138,36 +138,37 @@ const Users = () => {
   return (
     <div className="relative flex flex-row w-full min-h-screen">
       <AdminSidebar />
-      {/* Blur effect when modal is open */}
-      <div
-        className={`w-full flex-1 bg-gray-100 overflow-hidden transition-all duration-300 ${
-          modal ? "blur-sm" : ""
-        }`}
-      >
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <div className="bg-white mt-14 mb-10 ml-6 mr-4 shadow-md rounded-lg p-4 max-h-[500px] overflow-y-auto">
-            {rows?.length > 0 ? (
-              <Table
-                columns={columns}
-                data={rows}
-                heading="All Users"
-                showPagination={true}
-              />
-            ) : (
-              <p className="text-center text-gray-500">No Users found.</p>
-            )}
-          </div>
-        )}
+      <div className="relative w-full">
+        <div
+          className={`w-full flex-1 bg-gray-100 overflow-hidden transition-all duration-300 ${
+            modal ? "blur-sm" : ""
+          }`}
+        >
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <div className="bg-white mt-14 mb-10 ml-6 mr-4 shadow-md rounded-lg p-4 max-h-[500px] overflow-y-auto">
+              {rows?.length > 0 ? (
+                <Table
+                  columns={columns}
+                  data={rows}
+                  heading="All Users"
+                  showPagination={true}
+                />
+              ) : (
+                <p className="text-center text-gray-500">No Users found.</p>
+              )}
+            </div>
+          )}
+        </div>
+        {/* Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={modal}
+          onClose={() => setModal(false)}
+          onConfirm={confirmDeleteHandler}
+          message="Are you sure? This will delete the user and all related data."
+        />
       </div>
-      {/* Confirmation Modal */}
-      <ConfirmationModal
-        isOpen={modal}
-        onClose={() => setModal(false)}
-        onConfirm={confirmDeleteHandler}
-        message="Are you sure? This will delete the user and all related data."
-      />
     </div>
   );
 };

@@ -66,7 +66,7 @@ const AdminSidebar = () => {
                 : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
-            <MdOutlineDashboardCustomize className="text-black text-2xl" />
+            <MdOutlineDashboardCustomize className="text-black text-balance" />
             {!isCollapsed && (
               <h3 className="text-balance font-semibold">Dashboard</h3>
             )}
@@ -84,7 +84,7 @@ const AdminSidebar = () => {
                 : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
-            <FaUser className="text-blue-400 text-2xl" />
+            <FaUser className="text-blue-400 text-balance" />
             {!isCollapsed && (
               <h3 className="text-balance font-semibold">Users</h3>
             )}
@@ -102,7 +102,7 @@ const AdminSidebar = () => {
                 : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
-            <TbCategoryFilled className="text-green-400 text-2xl" />
+            <TbCategoryFilled className="text-green-400 text-balance" />
             {!isCollapsed && (
               <h3 className="text-balance font-semibold">Categories</h3>
             )}
@@ -120,7 +120,7 @@ const AdminSidebar = () => {
                 : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
-            <FaDiscourse className="text-yellow-400 text-2xl" />
+            <FaDiscourse className="text-yellow-400 text-balance" />
             {!isCollapsed && (
               <h3 className="text-balance font-semibold">Courses</h3>
             )}
@@ -131,7 +131,7 @@ const AdminSidebar = () => {
       {/* Logout Button (Always at the Bottom) */}
       <button onClick={handleLogout} className="w-full text-left mt-auto">
         <div className="flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all duration-300 bg-gray-800 hover:bg-gray-700">
-          <FiLogOut className="text-red-400 text-2xl" />
+          <FiLogOut className="text-red-400 text-balance" />
           {!isCollapsed && (
             <h3 className="text-balance font-semibold">Log Out</h3>
           )}

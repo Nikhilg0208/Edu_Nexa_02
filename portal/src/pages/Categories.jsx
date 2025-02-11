@@ -40,7 +40,6 @@ const columns = [
 const Categories = () => {
   const { isLoading, isError, data } = useGetCategoryQuery();
   const [modal, setModal] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null);
   const [deleteCategory] = useDeleteCategoryMutation();
   const [createCategory] = useCreateCategoryMutation();
   const [updateCategory] = useUpdateCategoryMutation();
@@ -54,15 +53,14 @@ const Categories = () => {
   const { token } = useSelector((state) => state.auth);
 
   const deleteHandler = async (id) => {
-    setSelectedUserId(id);
+    setCategoryId(id);
     setModal(true);
   };
 
   const confirmDeleteHandler = async () => {
-    if (!selectedUserId) return;
-
+    if (!categoryId) return;
     try {
-      const res = await deleteCategory({ categoryId: id, token }).unwrap();
+      const res = await deleteCategory({ categoryId, token }).unwrap();
       if (res?.success) {
         toast.success(res?.message);
       } else {
@@ -72,7 +70,7 @@ const Categories = () => {
       toast.error(error?.data?.message || "Error deleting category");
     } finally {
       setModal(false);
-      setSelectedUserId(null);
+      setCategoryId(null);
     }
   };
 
@@ -160,94 +158,115 @@ const Categories = () => {
   return (
     <div className="flex flex-row w-full min-h-screen">
       <AdminSidebar />
-      <div
-        className={`w-full flex-1 flex flex-col bg-gray-100 p-6 ${
-          modal ? "blur-sm" : ""
-        }`}
-      >
-        <div className="flex justify-end mb-4">
-          <button
-            className="bg-amber-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-amber-600"
-            onClick={() => {
-              setIsFormVisible(true);
-              setCategoryId(null);
-              setCategoryName("");
-              setCategoryDescription("");
-            }}
-          >
-            Add Category
-          </button>
-        </div>
-
-        {isFormVisible && (
-          <form
-            onSubmit={handleSubmit}
-            className="bg-white p-4 rounded-md shadow-md mb-4"
-          >
-            <div className="mb-4">
-              <label className="block text-gray-700">Category Name</label>
-              <input
-                type="text"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                value={categoryName}
-                onChange={(e) => setCategoryName(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Description</label>
-              <input
-                type="text"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                value={categoryDescription}
-                onChange={(e) => setCategoryDescription(e.target.value)}
-              />
-            </div>
-            <div className="flex justify-end gap-4">
-              <button
-                type="button"
-                className="bg-gray-500 text-white px-4 py-2 rounded-md"
-                onClick={() => {
-                  setIsFormVisible(false);
-                  setCategoryId(null);
-                  setCategoryName("");
-                  setCategoryDescription("");
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600"
-              >
-                {categoryId ? "Update Category" : "Add Category"}
-              </button>
-            </div>
-          </form>
-        )}
-
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <div className="bg-white shadow-md rounded-lg p-4 max-h-[400px] overflow-y-auto">
-            {rows?.length > 0 ? (
-              <Table
-                columns={columns}
-                data={rows}
-                heading="All Categories"
-                showPagination={true}
-              />
-            ) : (
-              <p className="text-center text-gray-500">No categories found.</p>
-            )}
+      <div className="relative w-full">
+        <div
+          className={`w-full flex-1 flex flex-col bg-gray-100 p-6 ${
+            modal ? "blur-sm" : ""
+          }`}
+        >
+          <div className="flex justify-end mb-4">
+            <button
+              className="bg-amber-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-amber-600"
+              onClick={() => {
+                setIsFormVisible(true);
+                setCategoryId(null);
+                setCategoryName("");
+                setCategoryDescription("");
+              }}
+            >
+              Add Category
+            </button>
           </div>
-        )}
+
+          {isFormVisible && (
+            <form
+              className="absolute top-0 left-0 w-full h-full flex items-center justify-center backdrop-blur-md z-2"
+              onSubmit={handleSubmit}
+            >
+              <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-xl border border-gray-200">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                  {categoryId ? "Update Category" : "Add New Category"}
+                </h3>
+
+                {/* Category Name */}
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-1">
+                    Category Name
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm"
+                    value={categoryName}
+                    onChange={(e) => setCategoryName(e.target.value)}
+                    placeholder="Enter category name"
+                  />
+                </div>
+
+                {/* Description */}
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-1">
+                    Description
+                  </label>
+                  <textarea
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm resize-none"
+                    value={categoryDescription}
+                    onChange={(e) => setCategoryDescription(e.target.value)}
+                    placeholder="Enter category description"
+                    rows="3"
+                  />
+                </div>
+
+                {/* Buttons */}
+                <div className="flex justify-end gap-3 mt-4">
+                  <button
+                    type="button"
+                    className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+                    onClick={() => {
+                      setIsFormVisible(false);
+                      setCategoryId(null);
+                      setCategoryName("");
+                      setCategoryDescription("");
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition shadow-md"
+                  >
+                    {categoryId ? "Update Category" : "Add Category"}
+                  </button>
+                </div>
+              </div>
+            </form>
+          )}
+
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <div className="bg-white shadow-md rounded-lg p-4 max-h-[400px] overflow-y-auto">
+              {rows?.length > 0 ? (
+                <Table
+                  columns={columns}
+                  data={rows}
+                  heading="All Categories"
+                  showPagination={true}
+                />
+              ) : (
+                <p className="text-center text-gray-500">
+                  No categories found.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+        <ConfirmationModal
+          isOpen={modal}
+          onClose={() => setModal(false)}
+          onConfirm={confirmDeleteHandler}
+          message="Are you sure? This will delete this Category."
+        />
       </div>
-      <ConfirmationModal
-        isOpen={modal}
-        onClose={() => setModal(false)}
-        onConfirm={confirmDeleteHandler}
-        message="Are you sure? This will delete the Category."
-      />
     </div>
   );
 };
