@@ -5,7 +5,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
+import React, { useState } from "react";
 import {
   AiOutlineSortAscending,
   AiOutlineSortDescending,
@@ -13,6 +13,7 @@ import {
 import { FaSort } from "react-icons/fa";
 
 const Table = ({ columns, data, heading, showPagination = false }) => {
+  const [sorting, setSorting] = useState([]);
   const table = useReactTable({
     data,
     columns,
@@ -20,6 +21,10 @@ const Table = ({ columns, data, heading, showPagination = false }) => {
     columnResizeMode: "onChange",
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
     initialState: {
       pagination: {
         pageSize: 6,
@@ -40,6 +45,7 @@ const Table = ({ columns, data, heading, showPagination = false }) => {
                     key={header.id}
                     className="relative px-4 py-3 text-left font-medium group cursor-pointer select-none min-w-0"
                     style={{ width: header.getSize() }}
+                    onClick={header.column.getToggleSortingHandler()}
                   >
                     <div className="flex items-center justify-between">
                       <span className="flex-1 truncate">

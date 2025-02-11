@@ -19,31 +19,43 @@ const columns = [
     header: "First Name",
     accessorKey: "firstName",
     cell: (props) => <p>{props.getValue()}</p>,
+    enableSorting: true,
+    sortingFn: "alphanumeric",
   },
   {
     header: "Last Name",
     accessorKey: "lastName",
     cell: (props) => <p>{props.getValue()}</p>,
+    enableSorting: true,
+    sortingFn: "alphanumeric",
   },
   {
     header: "Gender",
     accessorKey: "gender",
     cell: (props) => <p>{props.getValue()}</p>,
+    enableSorting: true,
+    sortingFn: "alphanumeric",
   },
   {
     header: "Email",
     accessorKey: "email",
     cell: (props) => <p>{props.getValue()}</p>,
+    enableSorting: true,
+    sortingFn: "alphanumeric",
   },
   {
     header: "Contact Number",
     accessorKey: "contactNumber",
     cell: (props) => <p>{props.getValue()}</p>,
+    enableSorting: true,
+    sortingFn: "alphanumeric",
   },
   {
     header: "Role",
     accessorKey: "accountType",
     cell: (props) => <p>{props.getValue()}</p>,
+    enableSorting: true,
+    sortingFn: "alphanumeric",
   },
   {
     header: "Actions",
@@ -56,7 +68,7 @@ const columns = [
 const Users = () => {
   const [rows, setRows] = useState([]);
   const [modal, setModal] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null); 
+  const [selectedUserId, setSelectedUserId] = useState(null);
   const { token } = useSelector((state) => state.auth);
   const [deleteUser] = useDeleteUserMutation();
   const { isLoading, isError, data } = useGetUsersQuery({ token });
@@ -135,7 +147,7 @@ const Users = () => {
         {isLoading ? (
           <Loader />
         ) : (
-          <div className="bg-white mt-16 mb-12 ml-8 mr-8 shadow-md rounded-lg p-4 max-h-[600px] overflow-y-auto">
+          <div className="bg-white mt-14 mb-10 ml-6 mr-4 shadow-md rounded-lg p-4 max-h-[500px] overflow-y-auto">
             {rows?.length > 0 ? (
               <Table
                 columns={columns}

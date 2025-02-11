@@ -19,11 +19,15 @@ const columns = [
     header: "Name",
     accessorKey: "name",
     cell: (props) => <p>{props.getValue()}</p>,
+    enableSorting: true,
+    sortingFn: "alphanumeric",
   },
   {
     header: "Description",
     accessorKey: "description",
     cell: (props) => <p>{props.getValue()}</p>,
+    enableSorting: true,
+    sortingFn: "alphanumeric",
   },
   {
     header: "Actions",

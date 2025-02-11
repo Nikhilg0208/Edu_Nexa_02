@@ -35,7 +35,7 @@ const AdminSidebar = () => {
   return (
     <div
       className={`h-screen flex flex-col bg-gray-900 text-white ${
-        isCollapsed ? "min-w-14 max-w-14" : "min-w-58 max-w-58"
+        isCollapsed ? "min-w-12 max-w-12" : "min-w-46 max-w-46"
       } transition-all duration-300`}
     >
       {/* Toggle Button */}
@@ -60,7 +60,7 @@ const AdminSidebar = () => {
           onClick={() => handleSetActive("/admin/dashboard")}
         >
           <div
-            className={`flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 ${
+            className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all duration-300 ${
               activeSection === "/admin/dashboard"
                 ? "bg-gray-700"
                 : "bg-gray-800 hover:bg-gray-700"
@@ -68,7 +68,7 @@ const AdminSidebar = () => {
           >
             <MdOutlineDashboardCustomize className="text-black text-2xl" />
             {!isCollapsed && (
-              <h3 className="text-xl font-semibold">Dashboard</h3>
+              <h3 className="text-balance font-semibold">Dashboard</h3>
             )}
           </div>
         </Link>
@@ -78,14 +78,16 @@ const AdminSidebar = () => {
           onClick={() => handleSetActive("/admin/dashboard/users")}
         >
           <div
-            className={`flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 ${
+            className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all duration-300 ${
               activeSection === "/admin/dashboard/users"
                 ? "bg-gray-700"
                 : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
             <FaUser className="text-blue-400 text-2xl" />
-            {!isCollapsed && <h3 className="text-xl font-semibold">Users</h3>}
+            {!isCollapsed && (
+              <h3 className="text-balance font-semibold">Users</h3>
+            )}
           </div>
         </Link>
 
@@ -94,7 +96,7 @@ const AdminSidebar = () => {
           onClick={() => handleSetActive("/admin/dashboard/categories")}
         >
           <div
-            className={`flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 ${
+            className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all duration-300 ${
               activeSection === "/admin/dashboard/categories"
                 ? "bg-gray-700"
                 : "bg-gray-800 hover:bg-gray-700"
@@ -102,7 +104,7 @@ const AdminSidebar = () => {
           >
             <TbCategoryFilled className="text-green-400 text-2xl" />
             {!isCollapsed && (
-              <h3 className="text-xl font-semibold">Categories</h3>
+              <h3 className="text-balance font-semibold">Categories</h3>
             )}
           </div>
         </Link>
@@ -112,23 +114,27 @@ const AdminSidebar = () => {
           onClick={() => handleSetActive("/admin/dashboard/courses")}
         >
           <div
-            className={`flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 ${
+            className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all duration-300 ${
               activeSection === "/admin/dashboard/courses"
                 ? "bg-gray-700"
                 : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
             <FaDiscourse className="text-yellow-400 text-2xl" />
-            {!isCollapsed && <h3 className="text-xl font-semibold">Courses</h3>}
+            {!isCollapsed && (
+              <h3 className="text-balance font-semibold">Courses</h3>
+            )}
           </div>
         </Link>
       </div>
 
       {/* Logout Button (Always at the Bottom) */}
       <button onClick={handleLogout} className="w-full text-left mt-auto">
-        <div className="flex items-center space-x-4 p-4 rounded-lg cursor-pointer transition-all duration-300 bg-gray-800 hover:bg-gray-700">
+        <div className="flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all duration-300 bg-gray-800 hover:bg-gray-700">
           <FiLogOut className="text-red-400 text-2xl" />
-          {!isCollapsed && <h3 className="text-xl font-semibold">Log Out</h3>}
+          {!isCollapsed && (
+            <h3 className="text-balance font-semibold">Log Out</h3>
+          )}
         </div>
       </button>
     </div>
