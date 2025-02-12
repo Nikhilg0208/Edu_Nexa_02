@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import AdminSidebar from "../components/AdminSidebar";
-import { useDeleteUserMutation, useGetUsersQuery } from "../redux/api/userAPI";
-import { useSelector } from "react-redux";
-import Loader from "../components/common/Loader";
-import { MdDeleteForever } from "react-icons/md";
-import Table from "../components/common/Table";
 import toast from "react-hot-toast";
+import { MdDeleteForever } from "react-icons/md";
+import { useSelector } from "react-redux";
+import AdminSidebar from "../components/AdminSidebar";
 import ConfirmationModal from "../components/common/ConfirmationModal";
+import Loader from "../components/common/Loader";
+import Table from "../components/common/Table";
+import { useDeleteUserMutation, useGetUsersQuery } from "../redux/api/userAPI";
+
 
 const columns = [
   {
@@ -111,7 +112,7 @@ const Users = () => {
             i?.image ||
             "https://lh3.googleusercontent.com/a/ACg8ocKRaLn2csmYEv6a9duVAS0TQH_nFFJVPlhECmx2MHXqU3V7TQ=s96-c"
           }
-          alt={i.name}
+          alt={i?.name || "User Avatar"}
         />
       ),
       firstName: i?.firstName || "N/A",

@@ -54,7 +54,7 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-200">
       <div
-        style={{ height: "550px" }}
+        style={{ height: "500px" }}
         className="w-4/12 bg-white rounded-lg flex flex-col items-center justify-center drop-shadow-lg font-sans"
       >
         <div className="text-black font-bold text-2xl">Welcome to EduNexa!</div>
