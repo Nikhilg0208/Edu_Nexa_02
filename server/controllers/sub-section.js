@@ -21,7 +21,7 @@ export const createSubSection = async (req, res) => {
 
     const SubSectionDetails = await SubSection.create({
       title: title,
-      timeDuration: `${uploadDetails.duration}`,
+      timeDuration: uploadDetails.duration.toFixed(2),
       description: description,
       videoUrl: uploadDetails.secure_url,
     });
@@ -71,7 +71,7 @@ export const updateSubSection = async (req, res) => {
         process.env.FOLDER_NAME
       );
       subSection.videoUrl = uploadDetails.secure_url;
-      subSection.timeDuration = `${uploadDetails.duration}`;
+      subSection.timeDuration = `${uploadDetails.duration.toFixed(2)}`;
     }
 
     await subSection.save();

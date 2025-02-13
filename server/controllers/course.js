@@ -434,12 +434,11 @@ export const getAllFullCourseDetails = async (req, res) => {
         filter.category = categoryData._id;
       }
     }
+
     const courses = await Course.find(filter)
       .populate({
         path: "instructor",
-        populate: {
-          path: "additionalDetails",
-        },
+        populate: { path: "additionalDetails" },
         select: "-password -courseProgress -image",
       })
       .populate("category")
@@ -468,11 +467,21 @@ export const getAllFullCourseDetails = async (req, res) => {
       let totalReviewCount = course.ratingAndReviews.length;
       let totalStudentsEnrolled = course.studentsEnroled.length;
 
-      course.courseContent.forEach((content) => {
-        content.subSection.forEach((subSection) => {
-          const timeDurationInSeconds = parseInt(subSection.timeDuration) || 0;
+      // 🔹 Modify `courseContent` to include section durations
+      const updatedCourseContent = course.courseContent.map((section) => {
+        let sectionDurationInSeconds = 0;
+
+        section.subSection.forEach((subSection) => {
+          const timeDurationInSeconds =
+            parseFloat(subSection.timeDuration) || 0;
+          sectionDurationInSeconds += timeDurationInSeconds;
           totalDurationInSeconds += timeDurationInSeconds;
         });
+
+        return {
+          ...section.toObject(), // Convert Mongoose document to plain object
+          totalDuration: convertSecondsToDuration(sectionDurationInSeconds),
+        };
       });
 
       if (totalReviewCount > 0) {
@@ -490,7 +499,7 @@ export const getAllFullCourseDetails = async (req, res) => {
         courseDescription: course.courseDescription,
         instructor: course.instructor,
         whatYouWillLearn: course.whatYouWillLearn,
-        courseContent: course.courseContent,
+        courseContent: updatedCourseContent, // ✅ Updated with section durations
         price: course.price,
         thumbnail: course.thumbnail,
         tag: course.tag,
