@@ -13,13 +13,13 @@ const SectionTable = ({ colSpan, courseSection }) => {
   };
 
   return (
-    <table className="w-full bg-gray-50 border-t border-gray-300">
+    <table className="w-full bg-gray-100 border-t border-gray-300">
       <tbody>
         {courseSection.map((section, index) => (
           <React.Fragment key={section._id}>
             <tr
-              className={`transition hover:bg-gray-100 ${
-                index % 2 === 0 ? "bg-gray-50" : "bg-white"
+              className={`transition hover:bg-gray-200 ${
+                index % 2 === 0 ? "bg-gray-100" : "bg-white"
               }`}
             >
               <td className="px-6 py-3 border-b">
@@ -40,8 +40,8 @@ const SectionTable = ({ colSpan, courseSection }) => {
               </td>
             </tr>
             {expandedSectionRows[section._id] && (
-              <tr colSpan={colSpan} className="bg-gray-50">
-                <td className="bg-gray-50">
+              <tr colSpan={colSpan} className="bg-gray-100">
+                <td className="bg-gray-100">
                   <SubSection subSection={section?.subSection} />
                 </td>
               </tr>

@@ -2,13 +2,13 @@ import React from "react";
 import { SiAirplayvideo } from "react-icons/si";
 const SubSection = ({ subSection }) => {
   return (
-    <table className="w-full bg-gray-50 border-t border-gray-300">
+    <table className="w-full bg-gray-100 border-t border-gray-300">
       <tbody>
         {subSection.map((subSec, index) => (
           <tr
             key={subSec._id}
-            className={`transition hover:bg-gray-100 ${
-              index % 2 === 0 ? "bg-gray-50" : "bg-white"
+            className={`transition hover:bg-gray-200 ${
+              index % 2 === 0 ? "bg-gray-100" : "bg-white"
             }`}
           >
             <td className="px-6 py-3 border-b">

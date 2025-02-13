@@ -128,7 +128,9 @@ const Courses = () => {
         {isLoadingCourses ? (
           <p className="text-center text-gray-500">Loading courses...</p>
         ) : courses?.length > 0 ? (
-          <CourseTable courses={courses} />
+          <div className="max-h-[450px] overflow-y-auto">
+            <CourseTable courses={courses} />
+          </div>
         ) : (
           <p className="text-center text-gray-500">No courses found.</p>
         )}

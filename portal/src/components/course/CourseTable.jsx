@@ -26,8 +26,8 @@ const CourseTable = ({ courses }) => {
 
   return (
     <div className="mt-6">
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
+      <div>
+        <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg select-none">
           <thead className="bg-gray-200 text-gray-700">
             <tr>
               {tableHeading.map((item, index) => (
@@ -45,8 +45,8 @@ const CourseTable = ({ courses }) => {
               <React.Fragment key={course._id}>
                 {/* Course Row */}
                 <tr
-                  className={`transition hover:bg-gray-100 ${
-                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  className={`transition hover:bg-gray-200 ${
+                    index % 2 === 0 ? "bg-gray-100" : "bg-white"
                   }`}
                 >
                   <td className="px-5 py-3 border-b">
@@ -93,7 +93,7 @@ const CourseTable = ({ courses }) => {
                 {/* Expandable Section */}
                 {expandedCourseRows[course._id] && (
                   <tr>
-                    <td colSpan={tableHeading.length} className="bg-gray-50">
+                    <td colSpan={tableHeading.length} className="bg-gray-100">
                       <SectionTable
                         colSpan={tableHeading.length}
                         courseSection={course?.courseContent}
