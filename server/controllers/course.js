@@ -499,7 +499,7 @@ export const getAllFullCourseDetails = async (req, res) => {
         courseDescription: course.courseDescription,
         instructor: course.instructor,
         whatYouWillLearn: course.whatYouWillLearn,
-        courseContent: updatedCourseContent, // ✅ Updated with section durations
+        courseContent: updatedCourseContent,
         price: course.price,
         thumbnail: course.thumbnail,
         tag: course.tag,
