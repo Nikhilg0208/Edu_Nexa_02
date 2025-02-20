@@ -479,13 +479,6 @@ export const getAllFullCourseDetails = async (req, res) => {
       })
       .exec();
 
-    if (!courses || courses.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No courses found",
-      });
-    }
-
     const courseDetails = courses.map((course) => {
       let totalDurationInSeconds = 0;
       let totalRatings = 0;
