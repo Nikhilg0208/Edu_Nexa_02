@@ -28,7 +28,7 @@ export const courseAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      invalidatesTags: ["courseApi"],
+      invalidatesTags: ["courseApi", "categoryApi"],
     }),
   }),
 });
