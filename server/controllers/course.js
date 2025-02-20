@@ -1,14 +1,13 @@
-import mongoose from "mongoose";
 import { redis } from "../config/redis.js";
 import { Category } from "../models/Category.js";
 import { Course } from "../models/Course.js";
 import { CourseProgress } from "../models/CourseProgress.js";
+import { RatingAndReview } from "../models/RatingandReview.js";
 import { Section } from "../models/Section.js";
 import { SubSection } from "../models/Subsection.js";
 import { User } from "../models/User.js";
 import { uploadImageToCloudinary } from "../utils/imageUploader.js";
 import { convertSecondsToDuration } from "../utils/secToDuration.js";
-import { RatingAndReview } from "../models/RatingandReview.js";
 
 // Function to create a new course
 export const createCourse = async (req, res) => {
@@ -404,7 +403,7 @@ export const deleteCourse = async (req, res) => {
       { _id: { $in: [...course.studentsEnroled, id] } },
       { $pull: { courses: courseId } }
     );
-    
+
     // Delete related Course Progress, Ratings, and Reviews
     await Promise.all([
       CourseProgress.deleteMany({ courseID: courseId }),
