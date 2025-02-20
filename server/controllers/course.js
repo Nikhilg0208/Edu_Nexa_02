@@ -385,9 +385,10 @@ export const deleteCourse = async (req, res) => {
       });
 
       if (!userCourse) {
-        return res
-          .status(403)
-          .json({ message: "You are not the instructor of this course" });
+        return res.status(403).json({
+          success: false,
+          message: "You are not the instructor of this course",
+        });
       }
     }
 
@@ -395,12 +396,15 @@ export const deleteCourse = async (req, res) => {
     const course = await Course.findById(courseId);
 
     if (!course) {
-      return res.status(404).json({ message: "Course not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
     }
 
     // Unenroll students from the course
     await User.updateMany(
-      { _id: { $in: [...course.studentsEnroled, id] } },
+      { _id: { $in: [...course.studentsEnroled, course.instructor] } },
       { $pull: { courses: courseId } }
     );
 
@@ -431,10 +435,13 @@ export const deleteCourse = async (req, res) => {
     // Clear Redis cache
     await Promise.all([redis.del("allcourses"), redis.del("categories")]);
 
-    return res.status(200).json({ message: "Course deleted successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Course deleted successfully" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
+      success: false,
       message: "Server error",
       error: error.message,
     });

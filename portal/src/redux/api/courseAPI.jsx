@@ -19,7 +19,18 @@ export const courseAPI = createApi({
       }),
       providesTags: ["courseApi"],
     }),
+    deleteCourse: builder.mutation({
+      query: ({ courseId, token }) => ({
+        url: "deleteCourse",
+        method: "DELETE",
+        body: { courseId },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: ["courseApi"],
+    }),
   }),
 });
 
-export const { useGetCoursesQuery } = courseAPI;
+export const { useGetCoursesQuery, useDeleteCourseMutation } = courseAPI;

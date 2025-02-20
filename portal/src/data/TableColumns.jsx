@@ -77,3 +77,14 @@ export const CategoryColumns = [
     enableSorting: false,
   },
 ];
+
+export const CourseTableHeading = [
+  "Course Name",
+  "Instructor",
+  "Category",
+  "Total Duration",
+  "Total Enrolled",
+  "Rating (Avg/Total)",
+  "Price",
+  "Actions",
+];

@@ -1,22 +1,18 @@
 import React, { useState } from "react";
-import { MdDeleteForever } from "react-icons/md";
+import toast from "react-hot-toast";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import { CourseTableHeading } from "../../data/TableColumns";
+import { useDeleteCourseMutation } from "../../redux/api/courseAPI";
+import ConfirmationModal from "../common/ConfirmationModal";
 import SectionTable from "./SectionTable";
-
-const tableHeading = [
-  "Course Name",
-  "Instructor",
-  "Category",
-  "Total Duration",
-  "Total Enrolled",
-  "Rating (Avg/Total)",
-  "Price",
-  "Actions",
-];
+import { useSelector } from "react-redux";
 
 const CourseTable = ({ courses }) => {
   const [expandedCourseRows, setExpandedCourseRows] = useState({});
-
+  const [deleteCourse] = useDeleteCourseMutation();
+  const [modal, setModal] = useState(false);
+  const [courseId, setCourseId] = useState(null);
   const toggleCourseRow = (courseId) => {
     setExpandedCourseRows((prev) => ({
       ...prev,
@@ -24,13 +20,37 @@ const CourseTable = ({ courses }) => {
     }));
   };
 
+  const deleteHandler = async (id) => {
+    setCourseId(id);
+    setModal(true);
+  };
+
+  const { token } = useSelector((state) => state.auth);
+
+  const confirmDeleteHandler = async () => {
+    try {
+      const res = await deleteCourse({ courseId, token }).unwrap();
+
+      if (res?.success) {
+        toast.success(res?.message);
+      } else {
+        toast.error(res?.message);
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || "Error deleting course");
+    } finally {
+      setModal(false);
+      setCourseId(null);
+    }
+  };
+
   return (
     <div className="mt-6">
-      <div>
+      <div className={`${modal ? "blur-sm" : ""}`}>
         <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg select-none">
           <thead className="bg-gray-200 text-gray-700">
             <tr>
-              {tableHeading.map((item, index) => (
+              {CourseTableHeading.map((item, index) => (
                 <th
                   key={index}
                   className="px-5 py-3 border-b text-left font-semibold"
@@ -86,6 +106,7 @@ const CourseTable = ({ courses }) => {
                     <MdDeleteForever
                       className="hover:text-red-500 cursor-pointer transition duration-200"
                       size={25}
+                      onClick={() => deleteHandler(course._id)}
                     />
                   </td>
                 </tr>
@@ -93,9 +114,12 @@ const CourseTable = ({ courses }) => {
                 {/* Expandable Section */}
                 {expandedCourseRows[course._id] && (
                   <tr>
-                    <td colSpan={tableHeading.length} className="bg-gray-100">
+                    <td
+                      colSpan={CourseTableHeading.length}
+                      className="bg-gray-100"
+                    >
                       <SectionTable
-                        colSpan={tableHeading.length}
+                        colSpan={CourseTableHeading.length}
                         courseSection={course?.courseContent}
                       />
                     </td>
@@ -106,6 +130,12 @@ const CourseTable = ({ courses }) => {
           </tbody>
         </table>
       </div>
+      <ConfirmationModal
+        isOpen={modal}
+        onClose={() => setModal(false)}
+        onConfirm={confirmDeleteHandler}
+        message="Are you sure? This will delete this Course."
+      />
     </div>
   );
 };
