@@ -8,6 +8,7 @@ import { SubSection } from "../models/Subsection.js";
 import { User } from "../models/User.js";
 import { uploadImageToCloudinary } from "../utils/imageUploader.js";
 import { convertSecondsToDuration } from "../utils/secToDuration.js";
+import { RatingAndReview } from "../models/RatingandReview.js";
 
 // Function to create a new course
 export const createCourse = async (req, res) => {
@@ -376,19 +377,34 @@ export const getInstructorCourses = async (req, res) => {
 export const deleteCourse = async (req, res) => {
   try {
     const { courseId } = req.body;
+    const { role, id } = req.user;
+
+    if (role !== "Admin") {
+      const userCourse = await User.findOne({
+        _id: id,
+        courses: { $in: courseId },
+      });
+
+      if (!userCourse) {
+        return res
+          .status(403)
+          .json({ message: "You are not the instructor of this course" });
+      }
+    }
 
     // Find the course
     const course = await Course.findById(courseId);
+
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
 
     // Unenroll students from the course
     await User.updateMany(
-      { _id: { $in: course.studentsEnroled } },
+      { _id: { $in: [...course.studentsEnroled, id] } },
       { $pull: { courses: courseId } }
     );
-
+    
     // Delete related Course Progress, Ratings, and Reviews
     await Promise.all([
       CourseProgress.deleteMany({ courseID: courseId }),
@@ -402,10 +418,13 @@ export const deleteCourse = async (req, res) => {
     const sections = await Section.find({ _id: { $in: course.courseContent } });
 
     const subSectionIds = sections.flatMap((section) => section.subSection);
+
     await Promise.all([
       SubSection.deleteMany({ _id: { $in: subSectionIds } }),
       Section.deleteMany({ _id: { $in: course.courseContent } }),
     ]);
+
+    await RatingAndReview.deleteMany({ course: courseId });
 
     // Delete the course
     await Course.findByIdAndDelete(courseId);

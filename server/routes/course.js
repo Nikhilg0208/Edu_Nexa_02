@@ -39,7 +39,13 @@ import {
 
 import { updateCourseProgress } from "../controllers/course-progress.js";
 
-import { auth, isAdmin, isInstructor, isStudent } from "../middleware/auth.js";
+import {
+  auth,
+  isAdmin,
+  isAdminOrInstructor,
+  isInstructor,
+  isStudent,
+} from "../middleware/auth.js";
 
 const courseRoutes = express.Router();
 
@@ -61,14 +67,19 @@ courseRoutes.get("/getAllCourses", getAllCourses);
 courseRoutes.get("/getCourseDetails", getCourseDetails);
 courseRoutes.get("/getFullCourseDetails", auth, getFullCourseDetails);
 
-courseRoutes.get("/getAllFullCourseDetails", auth, isAdmin, getAllFullCourseDetails);
+courseRoutes.get(
+  "/getAllFullCourseDetails",
+  auth,
+  isAdmin,
+  getAllFullCourseDetails
+);
 courseRoutes.post(
   "/updateCourseProgress",
   auth,
   isStudent,
   updateCourseProgress
 );
-courseRoutes.delete("/deleteCourse", auth, isInstructor, deleteCourse);
+courseRoutes.delete("/deleteCourse", auth, isAdminOrInstructor, deleteCourse);
 courseRoutes.post("/createCategory", auth, isAdmin, createCategory);
 
 courseRoutes.get("/showAllCategories", showAllCategories);
