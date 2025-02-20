@@ -13,29 +13,7 @@ import {
   useUpdateCategoryMutation,
 } from "../redux/api/categoryAPI";
 import ConfirmationModal from "../components/common/ConfirmationModal";
-
-const columns = [
-  {
-    header: "Name",
-    accessorKey: "name",
-    cell: (props) => <p>{props.getValue()}</p>,
-    enableSorting: true,
-    sortingFn: "alphanumeric",
-  },
-  {
-    header: "Description",
-    accessorKey: "description",
-    cell: (props) => <p>{props.getValue()}</p>,
-    enableSorting: true,
-    sortingFn: "alphanumeric",
-  },
-  {
-    header: "Actions",
-    accessorKey: "actions",
-    cell: (props) => props.getValue(),
-    enableSorting: false,
-  },
-];
+import { CategoryColumns } from "../data/TableColumns";
 
 const Categories = () => {
   const { isLoading, isError, data } = useGetCategoryQuery();
@@ -247,7 +225,7 @@ const Categories = () => {
             <div className="bg-white shadow-md rounded-lg p-4 max-h-[400px] overflow-y-auto">
               {rows?.length > 0 ? (
                 <Table
-                  columns={columns}
+                  columns={CategoryColumns}
                   data={rows}
                   heading="All Categories"
                   showPagination={true}
