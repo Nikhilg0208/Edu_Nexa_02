@@ -53,7 +53,7 @@ const CourseTable = ({ courses }) => {
               {CourseTableHeading.map((item, index) => (
                 <th
                   key={index}
-                  className="px-5 py-3 border-b text-left font-semibold"
+                  className="px-5 py-3 border-b text-left font-bold"
                 >
                   {item}
                 </th>
@@ -82,7 +82,7 @@ const CourseTable = ({ courses }) => {
                           className="text-gray-600 cursor-pointer hover:text-gray-900 transition"
                         />
                       )}
-                      <span className="font-medium">{course.courseName}</span>
+                      <span>{course.courseName}</span>
                     </div>
                   </td>
                   <td className="px-5 py-3 border-b">{`${course.instructor.firstName} ${course.instructor.lastName}`}</td>
