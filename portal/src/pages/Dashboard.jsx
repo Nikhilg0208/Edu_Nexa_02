@@ -1,11 +1,62 @@
 import { default as React } from "react";
-import AdminSidebar from "../components/AdminSidebar";
-import { PieChartComponent } from "../components/Charts";
 import { HiTrendingDown, HiTrendingUp } from "react-icons/hi";
+import AdminSidebar from "../components/AdminSidebar";
+import { BarChartComponent, PieChartComponent } from "../components/Charts";
 
 const data = [
   { name: "Female", value: 600 },
   { name: "Male", value: 190 },
+];
+
+const data1 = [
+  {
+    name: "Jan",
+    Sales: 4000,
+  },
+  {
+    name: "Feb",
+    Sales: 3000,
+  },
+  {
+    name: "Mar",
+    Sales: 2000,
+  },
+  {
+    name: "Apr",
+    Sales: 2780,
+  },
+  {
+    name: "May",
+    Sales: 1890,
+  },
+  {
+    name: "Jun",
+    Sales: 2390,
+  },
+  {
+    name: "Jul",
+    Sales: 3490,
+  },
+  {
+    name: "Aug",
+    Sales: 1490,
+  },
+  {
+    name: "Sep",
+    Sales: 2490,
+  },
+  {
+    name: "Oct",
+    Sales: 6490,
+  },
+  {
+    name: "Nov",
+    Sales: 7490,
+  },
+  {
+    name: "Dec",
+    Sales: 8490,
+  },
 ];
 
 const COLORS = ["#EB3370", "#36AFFF"];
@@ -43,11 +94,18 @@ const Dashboard = () => {
             heading="Courses"
           />
         </section>
+        <div className="flex flex-col md:flex-row gap-6 mt-6">
+          <div className="flex flex-col items-center max-w-72 p-6 h-80 bg-white rounded-2xl shadow-lg">
+            <h2 className="text-2xl font-semibold mb-2">Gender Ratio</h2>
+            <PieChartComponent data={data} COLORS={COLORS} />
+          </div>
 
-        {/* Gender Ratio Section */}
-        <div className="flex flex-col items-center max-w-72 md:w-[400px] mt-6 p-6 bg-white rounded-2xl shadow-lg">
-          <h2 className="text-2xl font-semibold mb-2">Gender Ratio</h2>
-          <PieChartComponent data={data} COLORS={COLORS} />
+          <div className="p-6 w-full flex flex-col items-center justify-center bg-white rounded-2xl shadow-lg">
+            <h2 className="text-2xl font-semibold mb-4">
+              Revenue and Transaction
+            </h2>
+            <BarChartComponent data1={data1} />
+          </div>
         </div>
       </div>
     </div>

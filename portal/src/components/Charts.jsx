@@ -1,6 +1,19 @@
 import React from "react";
-import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 const RADIAN = Math.PI / 180;
+
 const renderCustomizedLabel = ({
   cx,
   cy,
@@ -57,5 +70,18 @@ export const PieChartComponent = ({ data, COLORS }) => {
         </div>
       </div>
     </>
+  );
+};
+
+export const BarChartComponent = ({ data1 }) => {
+  return (
+    <BarChart width={700} height={350} data={data1}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="name" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="Sales" fill="#82ca9d" />
+    </BarChart>
   );
 };
