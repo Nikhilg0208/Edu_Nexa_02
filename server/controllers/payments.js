@@ -33,7 +33,11 @@ export const capturePayment = async (req, res) => {
 
       // Check if the user is already enrolled in the course
       const uid = new mongoose.Types.ObjectId(userId);
-      if (course.studentsEnroled.includes(uid)) {
+      if (
+        course.studentsEnroled.some(
+          (student) => String(student.user) === String(uid)
+        )
+      ) {
         return res
           .status(200)
           .json({ success: false, message: "Student is already Enrolled" });
@@ -89,7 +93,6 @@ export const verifyPayment = async (req, res) => {
   }
 
   let body = razorpay_order_id + "|" + razorpay_payment_id;
-  console.log("body", body);
 
   const expectedSignature = crypto
     .createHmac("sha256", process.env.RAZORPAY_SECRET)

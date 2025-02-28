@@ -11,7 +11,7 @@ const data = [
 const data1 = [
   {
     name: "Jan",
-    Sales: 4000,
+    Sales: 0,
   },
   {
     name: "Feb",
