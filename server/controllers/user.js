@@ -29,7 +29,6 @@ export const getAllUsers = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     let userId;
-    console.log("user");
     if (req.user.role !== "Admin") {
       userId = req.user.id;
     } else {
@@ -71,8 +70,8 @@ export const deleteUser = async (req, res) => {
       }
     } else if (user.accountType === "Student") {
       await Course.updateMany(
-        { studentsEnroled: user._id },
-        { $pull: { studentsEnroled: user._id } }
+        { "studentsEnroled.user": user._id },
+        { $pull: { studentsEnroled: { user: user._id } } }
       );
 
       await RatingAndReview.deleteMany({ user: user._id });

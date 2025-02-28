@@ -4,8 +4,8 @@ import AdminSidebar from "../components/AdminSidebar";
 import { BarChartComponent, PieChartComponent } from "../components/Charts";
 
 const data = [
-  { name: "Female", value: 600 },
-  { name: "Male", value: 190 },
+  { name: "Female", value: 0 },
+  { name: "Male", value: 10 },
 ];
 
 const data1 = [
@@ -59,6 +59,33 @@ const data1 = [
   },
 ];
 
+const data2 = [
+  {
+    name: "Devops",
+    Sales: 10,
+  },
+  {
+    name: "Database",
+    Sales: 20,
+  },
+  {
+    name: "Backend",
+    Sales: 30,
+  },
+  {
+    name: "Testing",
+    Sales: 20,
+  },
+  {
+    name: "Frontend",
+    Sales: 10,
+  },
+  {
+    name: "Cloud",
+    Sales: 10,
+  },
+];
+
 const COLORS = ["#EB3370", "#36AFFF"];
 
 const Dashboard = () => {
@@ -95,9 +122,41 @@ const Dashboard = () => {
           />
         </section>
         <div className="flex flex-col md:flex-row gap-6 mt-6">
-          <div className="flex flex-col items-center max-w-72 p-6 h-80 bg-white rounded-2xl shadow-lg">
-            <h2 className="text-2xl font-semibold mb-2">Gender Ratio</h2>
-            <PieChartComponent data={data} COLORS={COLORS} />
+          <div className="flex-col">
+            <div className="flex flex-col items-center max-w-72 p-6 h-80 bg-white rounded-2xl shadow-lg">
+              <h2 className="text-2xl font-semibold mb-2">Gender Ratio</h2>
+              <PieChartComponent data={data} COLORS={COLORS} />
+            </div>
+            <div className="flex flex-col items-center max-w-72 p-4 gap-4 mt-6 bg-white rounded-2xl shadow-lg">
+              <h2 className="text-2xl font-semibold mb-2">Inventory</h2>
+              <div className="flex flex-col justify-between w-full">
+                {data2.map((data3, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between w-full mb-2"
+                  >
+                    <div className="font-medium text-black">{data3.name}</div>
+                    <div className="flex items-center">
+                      <div className="flex items-center w-24">
+                        <div className="relative w-full h-2 bg-gray-300 rounded-lg overflow-hidden">
+                          <div
+                            className={`h-2 rounded-lg transition-all duration-300 ${
+                              data3.Sales > 75
+                                ? "bg-green-500"
+                                : data3.Sales > 50
+                                ? "bg-yellow-500"
+                                : "bg-blue-500"
+                            }`}
+                            style={{ width: `${data3.Sales}%` }}
+                          ></div>
+                        </div>
+                        <div className="ml-2">{data3.Sales}%</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="p-6 w-full flex flex-col items-center justify-center bg-white rounded-2xl shadow-lg">

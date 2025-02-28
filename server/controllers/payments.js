@@ -87,13 +87,6 @@ export const verifyPayment = async (req, res) => {
   ) {
     return res.status(200).json({ success: false, message: "Payment Failed" });
   }
-  console.log(
-    razorpay_order_id,
-    razorpay_payment_id,
-    razorpay_signature,
-    courses,
-    userId
-  );
 
   let body = razorpay_order_id + "|" + razorpay_payment_id;
   console.log("body", body);
@@ -102,8 +95,6 @@ export const verifyPayment = async (req, res) => {
     .createHmac("sha256", process.env.RAZORPAY_SECRET)
     .update(body.toString())
     .digest("hex");
-
-  console.log("expectedSignature", expectedSignature, razorpay_signature);
 
   if (expectedSignature === razorpay_signature) {
     await enrollStudents(courses, userId, res);
@@ -160,7 +151,11 @@ const enrollStudents = async (courses, userId, res) => {
       // Find the course and enroll the student in it
       const enrolledCourse = await Course.findOneAndUpdate(
         { _id: courseId },
-        { $push: { studentsEnroled: userId } },
+        {
+          $push: {
+            studentsEnroled: { user: userId, enrolledAt: new Date() },
+          },
+        },
         { new: true }
       );
 

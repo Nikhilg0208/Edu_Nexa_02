@@ -286,7 +286,7 @@ export const getFullCourseDetails = async (req, res) => {
     const userId = req.user.id;
     const courseDetails = await Course.findOne({
       _id: courseId,
-      $or: [{ studentsEnroled: userId }, { instructor: userId }],
+      $or: [{ "studentsEnroled.user": userId }, { instructor: userId }],
     })
       .populate({
         path: "instructor",

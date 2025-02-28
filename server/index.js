@@ -13,6 +13,7 @@ import { cloudinaryConnect } from "./config/cloudinary.js";
 import { connect } from "./config/database.js";
 import { initializeRedis } from "./config/redis.js";
 import userRoutes from "./routes/user.js";
+import dashboardRoutes from "./routes/dashboard.js";
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use(
 cloudinaryConnect();
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/course", courseRoutes);

@@ -12,7 +12,7 @@ export const createRating = async (req, res) => {
 
     const courseDetails = await Course.findOne({
       _id: courseId,
-      studentsEnroled: { $elemMatch: { $eq: userId } },
+      "studentsEnroled.user": { $elemMatch: { $eq: userId } },
     });
 
     if (!courseDetails) {
