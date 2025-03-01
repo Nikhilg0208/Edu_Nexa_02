@@ -5,7 +5,6 @@ import { BarChartComponent, PieChartComponent } from "../components/Charts";
 import { useGetDashboardQuery } from "../redux/api/dashboardAPI";
 import { useSelector } from "react-redux";
 
-
 const COLORS = ["#EB3370", "#36AFFF"];
 
 const Dashboard = () => {
@@ -89,8 +88,8 @@ const Dashboard = () => {
                       {data.category.split(" ")[0]}
                     </div>
                     <div className="flex items-center">
-                      <div className="flex items-center w-24">
-                        <div className="relative w-full h-2 bg-gray-300 rounded-lg overflow-hidden">
+                      <div className="flex items-center justify-between w-32">
+                        <div className="relative w-20 h-2 bg-gray-300 rounded-lg overflow-hidden">
                           <div
                             className={`h-2 rounded-lg transition-all duration-300 ${
                               data.percentage > 75
