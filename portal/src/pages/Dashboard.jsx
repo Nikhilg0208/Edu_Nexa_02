@@ -1,94 +1,44 @@
-import { default as React } from "react";
+import { default as React, useMemo } from "react";
 import { HiTrendingDown, HiTrendingUp } from "react-icons/hi";
 import AdminSidebar from "../components/AdminSidebar";
 import { BarChartComponent, PieChartComponent } from "../components/Charts";
+import { useGetDashboardQuery } from "../redux/api/dashboardAPI";
+import { useSelector } from "react-redux";
 
-const data = [
-  { name: "Female", value: 0 },
-  { name: "Male", value: 10 },
-];
-
-const data1 = [
-  {
-    name: "Jan",
-    Sales: 0,
-  },
-  {
-    name: "Feb",
-    Sales: 3000,
-  },
-  {
-    name: "Mar",
-    Sales: 2000,
-  },
-  {
-    name: "Apr",
-    Sales: 2780,
-  },
-  {
-    name: "May",
-    Sales: 1890,
-  },
-  {
-    name: "Jun",
-    Sales: 2390,
-  },
-  {
-    name: "Jul",
-    Sales: 3490,
-  },
-  {
-    name: "Aug",
-    Sales: 1490,
-  },
-  {
-    name: "Sep",
-    Sales: 2490,
-  },
-  {
-    name: "Oct",
-    Sales: 6490,
-  },
-  {
-    name: "Nov",
-    Sales: 7490,
-  },
-  {
-    name: "Dec",
-    Sales: 8490,
-  },
-];
-
-const data2 = [
-  {
-    name: "Devops",
-    Sales: 10,
-  },
-  {
-    name: "Database",
-    Sales: 20,
-  },
-  {
-    name: "Backend",
-    Sales: 30,
-  },
-  {
-    name: "Testing",
-    Sales: 20,
-  },
-  {
-    name: "Frontend",
-    Sales: 10,
-  },
-  {
-    name: "Cloud",
-    Sales: 10,
-  },
-];
 
 const COLORS = ["#EB3370", "#36AFFF"];
 
 const Dashboard = () => {
+  const { token } = useSelector((state) => state.auth);
+
+  const { isLoading, isError, data } = useGetDashboardQuery({ token });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading dashboard data</div>;
+
+  const dashboardData = data?.data;
+
+  if (!dashboardData) return <div>No data available</div>;
+
+  const cateWithCoursePercentage = dashboardData?.cateWithCoursePercentage;
+
+  const monthlyRevenue = dashboardData?.monthlyRevenue;
+
+  let FemaleCount = 0,
+    maleCount = 0;
+
+  dashboardData?.genderCounts?.forEach((data) => {
+    if (data._id === "Female") {
+      FemaleCount = data.count;
+    } else if (data._id === "Male") {
+      maleCount = data.count;
+    }
+  });
+  const genderData = [
+    { name: "Female", value: FemaleCount },
+    { name: "Male", value: maleCount },
+  ];
+
   return (
     <div className="flex">
       <AdminSidebar />
@@ -96,27 +46,27 @@ const Dashboard = () => {
         {/* Widget Section */}
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 bg-white p-6 rounded-2xl shadow-lg">
           <WidgetItem
-            percent={0}
+            percent={dashboardData?.revenueGrowthPercentage}
             amount={true}
-            value={100}
+            value={dashboardData?.TotalRevenue}
             heading="Revenue"
             color="rgb(0, 115, 255)"
           />
           <WidgetItem
-            percent={20}
-            value={400}
+            percent={dashboardData?.userGrowthPercentage}
+            value={dashboardData?.usersCount}
             color="rgb(0 198 202)"
             heading="Users"
           />
           <WidgetItem
-            percent={30}
-            value={200}
+            percent={dashboardData?.transactionGrowthPercentage}
+            value={dashboardData?.TotalTransaction}
             color="rgb(255 196 0)"
             heading="Transactions"
           />
           <WidgetItem
-            percent={40}
-            value={300}
+            percent={dashboardData?.courseGrowthPercentage}
+            value={dashboardData?.TotalCourses}
             color="rgb(76 0 255)"
             heading="Courses"
           />
@@ -125,32 +75,34 @@ const Dashboard = () => {
           <div className="flex-col">
             <div className="flex flex-col items-center max-w-72 p-6 h-80 bg-white rounded-2xl shadow-lg">
               <h2 className="text-2xl font-semibold mb-2">Gender Ratio</h2>
-              <PieChartComponent data={data} COLORS={COLORS} />
+              <PieChartComponent data={genderData} COLORS={COLORS} />
             </div>
             <div className="flex flex-col items-center max-w-72 p-4 gap-4 mt-6 bg-white rounded-2xl shadow-lg">
               <h2 className="text-2xl font-semibold mb-2">Inventory</h2>
               <div className="flex flex-col justify-between w-full">
-                {data2.map((data3, index) => (
+                {cateWithCoursePercentage.map((data, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between w-full mb-2"
                   >
-                    <div className="font-medium text-black">{data3.name}</div>
+                    <div className="font-medium text-black">
+                      {data.category.split(" ")[0]}
+                    </div>
                     <div className="flex items-center">
                       <div className="flex items-center w-24">
                         <div className="relative w-full h-2 bg-gray-300 rounded-lg overflow-hidden">
                           <div
                             className={`h-2 rounded-lg transition-all duration-300 ${
-                              data3.Sales > 75
+                              data.percentage > 75
                                 ? "bg-green-500"
-                                : data3.Sales > 50
+                                : data.percentage > 50
                                 ? "bg-yellow-500"
                                 : "bg-blue-500"
                             }`}
-                            style={{ width: `${data3.Sales}%` }}
+                            style={{ width: `${data.percentage}%` }}
                           ></div>
                         </div>
-                        <div className="ml-2">{data3.Sales}%</div>
+                        <div className="ml-2">{data.percentage}%</div>
                       </div>
                     </div>
                   </div>
@@ -163,7 +115,7 @@ const Dashboard = () => {
             <h2 className="text-2xl font-semibold mb-4">
               Revenue and Transaction
             </h2>
-            <BarChartComponent data1={data1} />
+            <BarChartComponent data={monthlyRevenue} />
           </div>
         </div>
       </div>

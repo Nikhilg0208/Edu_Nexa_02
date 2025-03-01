@@ -73,15 +73,15 @@ export const PieChartComponent = ({ data, COLORS }) => {
   );
 };
 
-export const BarChartComponent = ({ data1 }) => {
+export const BarChartComponent = ({ data }) => {
   return (
-    <BarChart width={700} height={350} data={data1}>
+    <BarChart width={700} height={350} data={data}>
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" />
+      <XAxis dataKey="month" />
       <YAxis />
       <Tooltip />
       <Legend />
-      <Bar dataKey="Sales" fill="#82ca9d" />
+      <Bar dataKey="revenue" fill="#82ca9d" />
     </BarChart>
   );
 };

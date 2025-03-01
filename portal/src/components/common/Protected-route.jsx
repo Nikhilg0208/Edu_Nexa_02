@@ -6,6 +6,7 @@ function ProtectedRoute({ children }) {
   if (token !== null && isAuthenticated && role === "Admin") {
     return children;
   } else {
+    console.log("Not authorized");
     return <Navigate to="/" />;
   }
 }
