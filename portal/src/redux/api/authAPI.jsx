@@ -5,7 +5,6 @@ export const authAPI = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_SERVER}/auth/`,
   }),
-  // tagTypes: ["auth"], set chache data
   endpoints: (builder) => ({
     signIn: builder.mutation({
       query: (data) => ({
@@ -13,7 +12,6 @@ export const authAPI = createApi({
         method: "POST",
         body: data,
       }),
-      // invalidatesTags: ["auth"],// for remove chache
     }),
   }),
 });

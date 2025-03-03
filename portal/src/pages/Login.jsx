@@ -23,32 +23,32 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await signin({
-        email: email,
-        password: password,
-      });
 
-      if (res.data.success && res.data) {
-        const role = res?.data?.user?.accountType;
-        if (role !== "Admin") {
-          toast.error("You are not an admin");
-          setEmail("");
-          setPassword("");
-        } else {
-          toast.success(res.data.message);
-          setEmail("");
-          setPassword("");
-          const token = res.data.token;
-          localStorage.setItem("token", token);
-          dispatch(setAuth({ token }));
-          navigate("/admin/dashboard");
-        }
+    const res = await signin({ email, password });
+
+    if (res?.error) {
+      const errorMessage =
+        res.error?.data?.message || "Something went wrong. Please try again.";
+        
+      toast.error(errorMessage);
+      return;
+    }
+
+    if (res?.data?.success) {
+      const role = res?.data?.user?.accountType;
+      if (role !== "Admin") {
+        toast.error("You are not an admin");
+        setEmail("");
+        setPassword("");
+      } else {
+        toast.success(res.data.message);
+        setEmail("");
+        setPassword("");
+        const token = res.data.token;
+        localStorage.setItem("token", token);
+        dispatch(setAuth({ token }));
+        navigate("/admin/dashboard");
       }
-    } catch (error) {
-      setEmail("");
-      setPassword("");
-      toast.error("Your Email is not registered.");
     }
   };
 
