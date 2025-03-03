@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useSignInMutation } from "../redux/api/authAPI";
 import { setAuth } from "../redux/reducer/authReducer";
+
 const Login = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [signin] = useSignInMutation();
   const navigate = useNavigate();
   const handleEmailChange = (e) => {
@@ -52,11 +55,8 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-200">
-      <div
-        style={{ height: "500px" }}
-        className="w-4/12 bg-white rounded-lg flex flex-col items-center justify-center drop-shadow-lg font-sans"
-      >
+    <div className="h-screen flex items-center justify-center bg-blue-300">
+      <div className="w-4/12 h-3/4 bg-white rounded-lg flex flex-col items-center justify-center drop-shadow-lg font-sans">
         <div className="text-black font-bold text-2xl">Welcome to EduNexa!</div>
         <div className="text-center">
           <h2 className="mt-4 text-lg text-gray-500">
@@ -65,7 +65,7 @@ const Login = () => {
         </div>
 
         <form className="mt-8 space-y-10 w-4/5" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px w-full">
+          <div className="rounded-md  -space-y-px w-full">
             <div className="w-full">
               <p className="mb-1">
                 Email Address <sup className="text-red-700">*</sup>
@@ -85,7 +85,7 @@ const Login = () => {
                 onChange={handleEmailChange}
               />
             </div>
-            <div className="w-full">
+            <div className="relative w-full">
               <p className="mb-1 mt-2">
                 Password <sup className="text-red-700">*</sup>
               </p>
@@ -95,7 +95,7 @@ const Login = () => {
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
@@ -103,6 +103,17 @@ const Login = () => {
                 value={password}
                 onChange={handlePasswordChange}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-10 text-gray-600"
+              >
+                {showPassword ? (
+                  <AiFillEye className="h-5 w-5" />
+                ) : (
+                  <AiFillEyeInvisible className="h-5 w-5" />
+                )}
+              </button>
             </div>
           </div>
 
