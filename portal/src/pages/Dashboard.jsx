@@ -70,7 +70,7 @@ const Dashboard = () => {
             heading="Courses"
           />
         </section>
-        <div className="flex flex-col md:flex-row gap-6 mt-6">
+        <div className="flex md:flex-col lg:flex-row gap-6 mt-6">
           <div className="flex-col">
             <div className="flex flex-col items-center max-w-72 p-6 h-80 bg-white rounded-2xl shadow-lg">
               <h2 className="text-2xl font-semibold mb-2">Gender Ratio</h2>

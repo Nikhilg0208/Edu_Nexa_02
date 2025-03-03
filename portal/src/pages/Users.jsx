@@ -8,6 +8,7 @@ import Loader from "../components/common/Loader";
 import Table from "../components/common/Table";
 import { useDeleteUserMutation, useGetUsersQuery } from "../redux/api/userAPI";
 import { UsersColumns } from "../data/TableColumns";
+import userAvatar from "../assets/userAvatar.png";
 
 const Users = () => {
   const [rows, setRows] = useState([]);
@@ -51,11 +52,8 @@ const Users = () => {
       image: (
         <img
           className="w-24 h-24 rounded-full object-cover"
-          src={
-            i?.image ||
-            "https://lh3.googleusercontent.com/a/ACg8ocKRaLn2csmYEv6a9duVAS0TQH_nFFJVPlhECmx2MHXqU3V7TQ=s96-c"
-          }
-          alt={i?.name || "User Avatar"}
+          src={userAvatar}
+          alt={"User Avatar"}
         />
       ),
       firstName: i?.firstName || "N/A",
@@ -82,9 +80,9 @@ const Users = () => {
   return (
     <div className="relative flex flex-row w-full min-h-screen">
       <AdminSidebar />
-      <div className="relative w-full">
+      <div className="relative w-full overflow-x-auto">
         <div
-          className={`w-full flex-1 bg-gray-100 overflow-hidden transition-all duration-300 ${
+          className={`w-full flex-1 min-h-screen bg-gray-100 overflow-hidden transition-all duration-300 ${
             modal ? "blur-sm" : ""
           }`}
         >

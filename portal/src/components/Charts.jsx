@@ -75,7 +75,7 @@ export const PieChartComponent = ({ data, COLORS }) => {
 
 export const BarChartComponent = ({ data }) => {
   return (
-    <BarChart width={700} height={350} data={data}>
+    <BarChart width={550} height={350} data={data}>
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="month" />
       <YAxis />

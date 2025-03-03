@@ -4,6 +4,7 @@ import AdminSidebar from "../components/AdminSidebar";
 import CourseTable from "../components/course/CourseTable.jsx";
 import { useGetCategoryQuery } from "../redux/api/categoryAPI";
 import { useGetCoursesQuery } from "../redux/api/courseAPI";
+import Loader from "../components/common/Loader.jsx";
 
 const Courses = () => {
   const { isLoading, isError, data } = useGetCategoryQuery();
@@ -79,9 +80,9 @@ const Courses = () => {
   }
 
   return (
-    <div className="flex">
+    <div className="flex min-h-screen">
       <AdminSidebar />
-      <div className="relative w-full p-6">
+      <div className="relative w-full p-6 h-screen overflow-x-auto">
         <h1 className="text-2xl font-semibold text-gray-900 mb-4">
           Courses List
         </h1>
@@ -126,9 +127,9 @@ const Courses = () => {
 
         {/* Courses List */}
         {isLoadingCourses ? (
-          <p className="text-center text-gray-500">Loading courses...</p>
+          <Loader />
         ) : courses?.length > 0 ? (
-          <div className="max-h-[450px] overflow-y-auto">
+          <div className="max-h-3/4 overflow-y-auto">
             <CourseTable courses={courses} />
           </div>
         ) : (

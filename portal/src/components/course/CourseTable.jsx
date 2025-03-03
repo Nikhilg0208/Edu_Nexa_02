@@ -45,7 +45,7 @@ const CourseTable = ({ courses }) => {
   };
 
   return (
-    <div className="mt-6">
+    <div className="overflow-x-auto mt-6">
       <div className={`${modal ? "blur-sm" : ""}`}>
         <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg select-none">
           <thead className="bg-gray-200 text-gray-700">

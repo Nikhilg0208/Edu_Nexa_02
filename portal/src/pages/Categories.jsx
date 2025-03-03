@@ -136,9 +136,9 @@ const Categories = () => {
   return (
     <div className="flex flex-row w-full min-h-screen">
       <AdminSidebar />
-      <div className="relative w-full">
+      <div className="relative w-full h-screen bg-gray-100 ">
         <div
-          className={`w-full flex-1 flex flex-col bg-gray-100 p-6 ${
+          className={`w-full flex-1 flex flex-col p-6 ${
             modal ? "blur-sm" : ""
           }`}
         >
